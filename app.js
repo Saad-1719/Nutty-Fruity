@@ -27,7 +27,9 @@ pool.getConnection((err, connection) => {
     console.log('Connected to MySQL database');
     connection.release();
 });
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
     res.render('pages/index', {
         // user,
@@ -72,18 +74,155 @@ app.post('/login', (req, res) => {
         }
     });
 });
+
+
 app.get('/signup', (req, res) => {
     res.render('pages/signup', {
         // user,
         title: 'Signup'
     })
 })
+
+
+// app.get('/product', (req, res) => {
+//     res.render('pages/product', {
+//         // user,
+//         title: 'Product',
+//         image: null,
+//         name: null,
+//         weight: null,
+//         price: null
+
+//     })
+// })
+
+
 app.get('/product', (req, res) => {
-    res.render('pages/product', {
-        // user,
-        title: 'Product'
-    })
-})
+    pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Separate categories from the result set
+        const categories = results.map(product => product.category);
+        // Remove duplicate categories
+        const uniqueCategories = [...new Set(categories)];
+
+        // Render the page with unique categories and product data
+        res.render('pages/product', {  
+            title: 'Product',
+            categories: uniqueCategories,
+            products: results
+        });
+    });
+});
+
+
+// app.get('/product2', (req, res) => {
+//     pool.query('SELECT category FROM products', (error, results, fields) => {
+//         if (error) {
+//             console.error('Error executing query:', error);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
+
+//         res.render('pages/product2', {
+//             title: 'Product',
+//             categories: results
+//         });
+//     });
+
+//     pool.query('SELECT name, image_data, weight, price,category FROM products', (error, results, fields) => {
+//         if (error) {
+//             console.error('Error executing query:', error);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
+
+//         res.render('pages/product2', {
+//             // title: 'Product',
+//             products: results
+//         });
+//     });
+// });
+
+// app.get('/product2', (req, res) => {
+//     pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
+//         if (error) {
+//             console.error('Error executing query:', error);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
+
+//         // Separate categories from the result set
+//         const categories = results.map(product => product.category);
+//         // Remove duplicate categories
+//         const uniqueCategories = [...new Set(categories)];
+
+//         res.render('pages/product2', {
+//             title: 'Product',
+//             categories: uniqueCategories,
+//             products: results
+//         });
+//         console.log(uniqueCategories);
+//     });
+// });
+
+// app.get('/product2', (req, res) => {
+//     pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
+//         if (error) {
+//             console.error('Error executing query:', error);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
+
+//         // Group products by category
+//         const productsByCategory = {};
+//         results.forEach(product => {
+//             if (!productsByCategory[product.category]) {
+//                 productsByCategory[product.category] = [];
+//             }
+//             productsByCategory[product.category].push(product);
+//         });
+
+//         // Extract unique categories
+//         const categories = Object.keys(productsByCategory);
+
+//         res.render('pages/product2', {
+//             title: 'Product',
+//             categories: categories,
+//             products: results,
+//             productsByCategory: productsByCategory  // Pass products grouped by category to the template
+//         });
+//         console.log(categories);
+//     });
+// });
+
+app.get('/product2', (req, res) => {
+    pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Separate categories from the result set
+        const categories = results.map(product => product.category);
+        // Remove duplicate categories
+        const uniqueCategories = [...new Set(categories)];
+
+        // Render the page with unique categories and product data
+        res.render('pages/product2', {  
+            title: 'Product',
+            categories: uniqueCategories,
+            products: results
+        });
+    });
+});
+
+
 
 app.get('/cart', (req, res) => {
     res.render('pages/cart', {
