@@ -16,54 +16,142 @@
             width: 100px;
             height: auto;
         }
+        #count {
+		height: 22px;
+		width: 22px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 22px;
+		background-color: goldenrod;
+		color: white;
+	}
+	.container {
+		display: flex;
+		width: 70%;
+		margin-bottom: 30px;
+	}
+	#root {
+		width: 60%;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-gap: 20px;
+	}
+	.sidebar {
+		width: 40%;
+		border-radius: 5px;
+		background-color: #eee;
+		margin-left: 20px;
+		padding: 15px;
+		text-align: center;
+	}
+	.head {
+		background-color: goldenrod;
+		border-radius: 3px;
+		height: 40px;
+		padding: 10px;
+		margin-bottom: 20px;
+		color: white;
+		display: flex;
+		align-items: center;
+	}
+	.foot {
+		display: flex;
+		justify-content: space-between;
+		margin: 20px 0px;
+		padding: 10px 0px;
+		border-top: 1px solid #333;
+	}
+	.box {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid goldenrod;
+		border-radius: 5px;
+		padding: 15px;
+	}
+	.img-box {
+		width: 100%;
+		height: 180px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.images {
+		max-width: 90%;
+		max-height: 90%;
+		object-fit: cover;
+		object-position: center;
+	}
+	.bottom {
+		margin-top: 20px;
+		width: 100%;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		height: 110px;
+	}
+	h2 {
+		font-size: 20px;
+		color: red;
+	}
+	button {
+		width: 100%;
+		position: relative;
+		border: none;
+		border-radius: 5px;
+		background-color: goldenrod;
+		padding: 7px 25px;
+		cursor: pointer;
+		color: white;
+	}
+	button:hover {
+		background-color: #333;
+	}
+	.cart-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px;
+		background-color: white;
+		border-bottom: 1px solid #aaa;
+		border-radius: 3px;
+		margin: 10px 10px;
+	}
+	.row-img {
+		width: 50px;
+		height: 50px;
+		border-radius: 50px;
+		border: 1px solid goldenrod;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.rowimg {
+		max-width: 43px;
+		max-height: 43px;
+		border-radius: 50%;
+	}
+	.fa-trash:hover {
+		cursor: pointer;
+		color: #333;
+	}
     </style>
 
 <div class="cart-container">
-    <h2 class="text-center mb-4">Your Cart</h2>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Tomato">
-                </div>
-                <div class="col-md-6">
-                    <h5 class="card-title">Tomato</h5>
-                    <p class="card-text">Price: $2.99</p>
-                    <p class="card-text">Quantity: 2</p>
-                </div>
-                <div class="col-md-3">
-                    <p class="card-text">Total: $5.98</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Carrot">
-                </div>
-                <div class="col-md-6">
-                    <h5 class="card-title">Carrot</h5>
-                    <p class="card-text">Price: $1.49</p>
-                    <p class="card-text">Quantity: 3</p>
-                </div>
-                <div class="col-md-3">
-                    <p class="card-text">Total: $4.47</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add more items here as needed -->
-
-    <div class="text-end">
-        <h5>Total Bill: $10.45</h5>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal">Place Order</button>
-    </div>
-
+    <div id="root"></div>
+	<div class="sidebar">
+        
+		<div class="head"><p>My Cart</p><p id="count">0</p></div>
+		<div id="cartItem">Your cart is empty</div>
+		<div class="foot">
+			<h3>Total</h3>
+			<h2 id="total">$ 0.00</h2>
+		</div>
+	</div>
 </div>
 
 <!-- Order Modal -->
@@ -87,5 +175,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+<script>
+	let cart = [];
+
+	function addtocart(id, image, title, price) {
+		const productToAdd = { id, image, title, price };
+		cart.push(productToAdd);
+		displaycart();
+	}
+
+	function delElement(index) {
+		cart.splice(index, 1);
+		displaycart();
+	}
+
+	function displaycart() {
+		let total = 0;
+		const cartElement = document.getElementById("cartItem");
+		cartElement.innerHTML = "";
+		cart.forEach((item, index) => {
+			const { image, title, price } = item;
+			total += price;
+			cartElement.innerHTML += `
+				<div class='cart-item'>
+					<div class='row-img'>
+						<img class='rowimg' src='${image}'>
+					</div>
+					<p style='font-size:12px;'>${title}</p>
+					<h2 style='font-size: 15px;'>$ ${price}.00</h2>
+					<i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
+				</div>`;
+		});
+		document.getElementById("count").textContent = cart.length;
+		document.getElementById("total").textContent = `$ ${total}.00`;
+	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const productList = document.getElementById("product-list");
+		productList.addEventListener("click", function (event) {
+			if (event.target.classList.contains("add-to-cart-btn")) {
+				const id = parseInt(event.target.dataset.id);
+				const image = event.target.dataset.image;
+				const title = event.target.dataset.title;
+				const price = parseFloat(event.target.dataset.price);
+				addtocart(id, image, title, price);
+			}
+		});
+	});
+</script>
 </body>
 </html>

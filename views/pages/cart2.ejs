@@ -1,0 +1,176 @@
+<!--
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+
+<div class="cart-container">
+    <h2 class="text-center mb-4">Your Cart</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Tomato">
+                </div>
+                <div class="col-md-6">
+                    <h5 class="card-title">Tomato</h5>
+                    <p class="card-text">Price: $2.99</p>
+                    <p class="card-text">Quantity: 2</p>
+                </div>
+                <div class="col-md-3">
+                    <p class="card-text">Total: $5.98</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="text-end">
+        <h5>Total Bill: $10.45</h5>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal">Place Order</button>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Your order has been placed successfully! It will be delivered to your address on cash on delivery.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+
+<%- include('../partials/head', {title: 'Page Title'}) %>
+<%- include('../partials/headerSub') %>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+
+<div class="cart-container">
+    <h2 class="text-center mb-4">Your Cart</h2>
+
+    <!-- Cart items will be dynamically added here -->
+    <div id="cart-items"></div>
+
+    <div class="text-end">
+        <!-- Total bill will be dynamically updated here -->
+        <h5 id="total-bill">Total Bill: $0.00</h5>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal">Place Order</button>
+    </div>
+
+</div>
+
+<!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Your order has been placed successfully! It will be delivered to your address on cash on delivery.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to add item to cart dynamically
+    function addItemToCart(name, price, quantity) {
+        // Create HTML for the new item
+        var newItem = `
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="https://via.placeholder.com/200" class="card-img-top" alt="${name}">
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="card-title">${name}</h5>
+                            <p class="card-text">Price: $${price.toFixed(2)}</p>
+                            <p class="card-text">Quantity: ${quantity}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="card-text">Total: $${(price * quantity).toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Append the new item to the cart
+        $("#cart-items").append(newItem);
+
+        // Update total bill
+        updateTotalBill(price, quantity);
+    }
+
+    // Function to update total bill
+    function updateTotalBill(price, quantity) {
+        // Get current total bill
+        var currentTotal = parseFloat($("#total-bill").text().replace("Total Bill: $", ""));
+
+        // Calculate new total bill
+        var newTotal = currentTotal + (price * quantity);
+
+        // Update total bill display
+        $("#total-bill").text("Total Bill: $" + newTotal.toFixed(2));
+    }
+
+    // Example usage: addItemToCart("Tomato", 2.99, 2);
+</script>
+</body>
+</html>
