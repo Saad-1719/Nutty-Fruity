@@ -1,0 +1,73 @@
+<%- include('../partials/head', {title: 'Page Title'}) %>
+<%- include('../partials/headerSub') %>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .signup-container {
+            max-width: 400px;
+            margin: 100px auto;
+        }
+    </style>
+
+
+<div class="signup-container">
+    <h2 class="text-center mb-4">Sign Up</h2>
+    <form id="signupForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
+            <div id="emailHelp" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Validate name
+        if (name === '') {
+            alert('Please enter your name.');
+            return;
+        }
+
+        // Validate email
+        if (!isValidEmail(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+
+        // Validate password
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters long.');
+            return;
+        }
+
+        // If all validations pass, you can submit the form or send the data to the server
+        alert('Sign up successful!');
+        // Here you can redirect the user to the main page or perform any other action
+    });
+
+    function isValidEmail(email) {
+        // This is a basic email validation function, you can enhance it as needed
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<%- include('../partials/head') %> <%- include('../partials/headerMain') %>
+
+<style>
+	/* Custom Styles */
+	.hero {
+		background-image: url("https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+		background-size: cover;
+		color: #fff;
+		padding: 280px 0;
+		text-align: center;
+	}
+
+	body {
+		background-color: aquamarine;
+	}
+	.product-card {
+		transition: transform 0.3s;
+		border: none;
+	}
+
+	.product-card:hover {
+		transform: scale(1.05);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	}
+
+	.product-card img {
+		border-radius: 10px;
+	}
+
+	.btn-primary {
+		background-color: #007bff;
+		border-color: #007bff;
+		padding: 10px 20px;
+		font-size: 18px;
+		border-radius: 5px;
+	}
+</style>
+
+<section id="hero" class="hero d-flex align-items-center">
+	<div class="container text-center">
+		<h1 class="display-2">Fresh, Tasty, and Healthy Fruits</h1>
+		<p class="lead">
+			Order now and enjoy the goodness of nature delivered to your doorstep.
+		</p>
+		<a href="#products" class="btn btn-primary btn-lg">Shop Now</a>
+	</div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+	<div class="container">
+		<h2 class="display-4 text-center mb-5">About Us</h2>
+		<p class="lead text-center">
+			<!-- We are committed to providing you with the freshest and highest
+					quality fruits sourced directly from local farmers. -->
+			Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse ducimus, et
+			nulla porro nihil nobis, perspiciatis, at provident iusto enim sapiente
+			ab. Neque vero nihil odit, dolores quam earum officia ullam sed nesciunt,
+			cumque sunt, ad rerum. Dolores cumque numquam tenetur eveniet libero vero
+			doloribus, explicabo corrupti saepe, corporis velit pariatur tempore omnis
+			ab at modi voluptatum obcaecati culpa quo repellat praesentium
+			necessitatibus. Dolores tempore provident sequi sunt consequuntur officiis
+			cum tenetur voluptas nemo vero, sit architecto animi distinctio non neque
+			labore. Nihil perspiciatis facilis cupiditate ab necessitatibus.
+			Voluptatibus et magnam quod eveniet debitis vero repellendus, iure
+			possimus accusamus recusandae cum nobis iste. Quidem, placeat quia sit
+			rerum dignissimos ullam accusamus veritatis non voluptates eum error
+			facere nesciunt a nihil eius maxime fugit ipsa beatae consectetur optio
+			quibusdam perferendis eos! Dignissimos optio deleniti velit dolor nobis,
+			ad odit consectetur obcaecati ullam eius eligendi debitis perferendis
+			pariatur minus sit aut qui eaque dolorum voluptate non fugiat? Inventore,
+			ullam. Magni pariatur delectus corporis, laudantium voluptatum accusantium
+			eius harum numquam minima itaque consequatur iure accusamus et consectetur
+			asperiores in voluptatem? Labore quas possimus eos amet qui, odio nam
+			neque ullam, dolorum reiciendis ex corporis commodi voluptatum quam
+			aperiam ab assumenda fuga optio dolorem.
+		</p>
+	</div>
+</section>
+
+<!-- Products Section -->
+
+<section id="products" class="products">
+    <div class="container">
+        <h2 class="display-4 text-center mb-5">Our Products</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 1">
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 2">
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 3">
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 4">
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 5">
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                         class="card-img-top" alt="Product Image 6">
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/product" class="btn btn-primary">Explore</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<!-- <section id="contact" class="contact">
+	<div class="container">
+		<h2 class="display-4 text-center mb-5">Contact Us</h2>
+		<p class="lead text-center">
+			Have a question or want to give us feedback? Feel free to reach out!
+		</p>
+		<form class="row g-3">
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Your Name" />
+			</div>
+			<div class="col-md-6">
+				<input type="email" class="form-control" placeholder="Your Email" />
+			</div>
+			<div class="col-12">
+				<textarea
+					class="form-control"
+					rows="5"
+					placeholder="Your Message"
+				></textarea>
+			</div>
+			<div class="col-12 text-center">
+				<button type="submit" class="btn btn-primary btn-lg">
+					Send Message
+				</button>
+			</div>
+		</form>
+	</div>
+</section> -->
+
+<!-- <section id="contact" class="contact">
+    <div class="container">
+        <h2 class="display-4 text-center mb-5">Connect with Us</h2>
+        <p class="lead text-center">
+            Want to reach out or stay updated with us? Find our physical locations or connect with us on social media!
+        </p>
+        <div class="row">
+            <div class="col-md-6 text-center mb-4">
+                <h5>Our Locations</h5>
+                <p>
+                    <strong>Head Office:</strong><br>
+                    123 Main Street, Cityville, ST 12345
+                </p>
+                <p>
+                    <strong>Branch Office:</strong><br>
+                    456 Elm Street, Townsville, ST 67890
+                </p>
+            </div>
+            <div class="col-md-6 text-center mb-4">
+                <h5>Follow Us</h5>
+                <p>
+                    <a href="https://www.facebook.com/yourpage" target="_blank" class="btn btn-primary btn-lg mb-2">
+                        Facebook
+                    </a>
+                </p>
+                <p>
+                    <a href="https://www.twitter.com/yourpage" target="_blank" class="btn btn-primary btn-lg mb-2">
+                        Twitter
+                    </a>
+                </p>
+                <p>
+                    <a href="https://www.instagram.com/yourpage" target="_blank" class="btn btn-primary btn-lg mb-2">
+                        Instagram
+                    </a>
+                </p>
+                <p>
+                    <a href="https://www.linkedin.com/yourpage" target="_blank" class="btn btn-primary btn-lg">
+                        LinkedIn
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<section id="contact" class="contact">
+    <div class="container">
+        <h2 class="display-4 text-center mb-5">Connect with Us</h2>
+        <p class="lead text-center">
+            Want to reach out or stay updated with us? Find our physical location or connect with us on social media!
+        </p>
+        <div class="row">
+            <div class="col-md-6 offset-md-3 text-center mb-4"> <!-- Center the location section -->
+                <h5>Our Location</h5>
+                <p>
+                    <strong>Head Office:</strong><br>
+                    123 Main Street, Cityville, ST 12345
+                </p>
+            </div>
+            <div class="col-md-6 offset-md-3 text-center mb-4"> <!-- Center the location section -->
+                <h5>Follow Us</h5>
+                <!-- <p>
+                    <a href="https://www.facebook.com/yourpage" target="_blank" class="btn btn-outline-primary btn-lg mb-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.675 0H1.325C0.593 0 0 0.593 0 1.325V22.675C0 23.407 0.593 24 1.325 24H12.81V14.706H9.692V11.1H12.81V8.413C12.81 5.327 14.765 3.563 17.567 3.563C18.829 3.563 19.945 3.676 20.247 3.724V6.723L18.348 6.724C17.012 6.724 16.761 7.406 16.761 8.303V11.1H20.131L19.615 14.706H16.761V24H22.675C23.407 24 24 23.407 24 22.675V1.325C24 0.593 23.407 0 22.675 0Z" fill="currentColor"/>
+                        </svg>
+                        Facebook
+                    </a>
+                </p>
+                <p>
+                    <a href="https://www.instagram.com/yourpage" target="_blank" class="btn btn-outline-primary btn-lg mb-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.163C6.507 2.163 2.163 6.507 2.163 12C2.163 17.493 6.507 21.837 12 21.837C17.493 21.837 21.837 17.493 21.837 12C21.837 6.507 17.493 2.163 12 2.163ZM12 20.273C7.339 20.273 3.727 16.661 3.727 12C3.727 7.339 7.339 3.727 12 3.727C16.661 3.727 20.273 7.339 20.273 12C20.273 16.661 16.661 20.273 12 20.273ZM18.873 6.145C19.204 6.145 19.5 5.848 19.5 5.518C19.5 5.187 19.204 4.891 18.873 4.891C18.542 4.891 18.246 5.187 18.246 5.518C18.246 5.848 18.542 6.145 18.873 6.145ZM12 7.84C9.213 7.84 7.063 9.99 7.063 12.777C7.063 15.564 9.213 17.714 12 17.714C14.787 17.714 16.937 15.564 16.937 12.777C16.937 9.99 14.787 7.84 12 7.84ZM12 16.15C10.127 16.15 8.626 14.649 8.626 12.777C8.626 10.904 10.127 9.403 12 9.403C13.873 9.403 15.374 10.904 15.374 12.777C15.374 14.649 13.873 16.15 12 16.15Z" fill="currentColor"/>
+                        </svg>
+                        Instagram
+                    </a>
+                </p> -->
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-auto">
+                        <a href="https://www.facebook.com/yourpage" target="_blank" class="btn btn-outline-primary btn-lg mb-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22.675 0H1.325C0.593 0 0 0.593 0 1.325V22.675C0 23.407 0.593 24 1.325 24H12.81V14.706H9.692V11.1H12.81V8.413C12.81 5.327 14.765 3.563 17.567 3.563C18.829 3.563 19.945 3.676 20.247 3.724V6.723L18.348 6.724C17.012 6.724 16.761 7.406 16.761 8.303V11.1H20.131L19.615 14.706H16.761V24H22.675C23.407 24 24 23.407 24 22.675V1.325C24 0.593 23.407 0 22.675 0Z" fill="currentColor"/>
+                            </svg>
+                            Facebook
+                        </a>
+                    </div>
+                    <div class="col-md-auto">
+                        <a href="https://www.instagram.com/yourpage" target="_blank" class="btn btn-outline-primary btn-lg mb-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2.163C6.507 2.163 2.163 6.507 2.163 12C2.163 17.493 6.507 21.837 12 21.837C17.493 21.837 21.837 17.493 21.837 12C21.837 6.507 17.493 2.163 12 2.163ZM12 20.273C7.339 20.273 3.727 16.661 3.727 12C3.727 7.339 7.339 3.727 12 3.727C16.661 3.727 20.273 7.339 20.273 12C20.273 16.661 16.661 20.273 12 20.273ZM18.873 6.145C19.204 6.145 19.5 5.848 19.5 5.518C19.5 5.187 19.204 4.891 18.873 4.891C18.542 4.891 18.246 5.187 18.246 5.518C18.246 5.848 18.542 6.145 18.873 6.145ZM12 7.84C9.213 7.84 7.063 9.99 7.063 12.777C7.063 15.564 9.213 17.714 12 17.714C14.787 17.714 16.937 15.564 16.937 12.777C16.937 9.99 14.787 7.84 12 7.84ZM12 16.15C10.127 16.15 8.626 14.649 8.626 12.777C8.626 10.904 10.127 9.403 12 9.403C13.873 9.403 15.374 10.904 15.374 12.777C15.374 14.649 13.873 16.15 12 16.15Z" fill="currentColor"/>
+                            </svg>
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Footer -->
+<footer class="footer mt-auto py-3 bg-dark text-white">
+	<div class="container text-center">
+		<p>&copy; 2024 Delicious Fruits. All rights reserved.</p>
+	</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
