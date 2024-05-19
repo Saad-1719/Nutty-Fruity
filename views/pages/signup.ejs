@@ -2,13 +2,44 @@
 <%- include('../partials/headerSub') %>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to bottom, #d2b48c, #ceffc7);
             font-family: Arial, sans-serif;
         }
         .signup-container {
-            max-width: 400px;
-            margin: 100px auto;
+            max-width: 473px;
+				margin: 100px auto;
+				border: 2px solid rgb(0, 0, 0);
+				padding: 31px;
+				border-radius: 5%;
         }
+        .btn-primary {
+				background-color: #76a72e;
+				border-color: #76a72e;
+				padding: 10px 20px;
+				font-size: 18px;
+				border-radius: 5px;
+
+				&:active {
+					background-color: #5c7f2c;
+					border-color: #5c7f2c;
+					/* box-shadow: pink; */
+					/* Remove default shadow */
+				}
+
+				&:hover {
+					background-color: #5c7f2c;
+					border-color: #5c7f2c;
+				}
+
+				&:focus {
+					outline: none;
+					/* Remove focus outline */
+					background-color: #5c7f2c;
+					border: none;
+					box-shadow: none;
+					/* Reset background color */
+				}
+			}
     </style>
 
 
@@ -28,7 +59,12 @@
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </div>
+        <p class="text-center mt-3">
+            Have have an account? <a href="/login">Login</a>
+        </p>
     </form>
 </div>
 
@@ -69,5 +105,5 @@
     }
 </script>
 
-</body>
-</html>
+<%- include('../partials/footer') %>
+

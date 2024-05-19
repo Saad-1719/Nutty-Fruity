@@ -165,6 +165,8 @@ app.post('/product', (req, res) => {
 
     const userId = req.session.userId;
     const { products, total } = req.body;
+    const productsJSON = JSON.stringify(products);
+
     console.log('User ID:', userId);
     console.log('Total:', total);
     // Insert the order details into the database
@@ -177,6 +179,32 @@ app.post('/product', (req, res) => {
         console.log('Order placed successfully!');
         res.send('Order placed successfully!');
     });
+
+    pool.query('select order_id from orders where user_id = ?', [userId], (error, results, fields) => {
+        if (error) {
+            console.error('Error finding order_id:', error);
+            // res.status(500).send('Internal Server Error');
+            return;
+        }
+        const user_order_id = results[results.length - 1].order_id;
+        console.log('Order ID:', user_order_id);
+
+        products.forEach(product => {
+            const { name, price, quantity } = product;
+
+            pool.query('INSERT INTO order_details ( order_id, product_name, price_single_item, quantity) VALUES ( ?, ?, ?, ?)', [user_order_id, name, price, quantity], (error, results, fields) => {
+                if (error) {
+                    console.error('Error placing insertion:', error);
+                    res.status(500).send('Internal Server Error');
+                    return;
+                }
+                console.log('Product inserted successfully:', product);
+            });
+        });
+    });
+
+
+
 });
 
 

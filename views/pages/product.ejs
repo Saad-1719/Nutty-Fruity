@@ -2,7 +2,10 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
+                /* background-color: #f8f9fa; */
+                /* background: radial-gradient(circle at center, #ff0000, #ceffc7); */
+                background: linear-gradient(to bottom, #d2b48c, #ceffc7);
+
                 overflow-y: scroll;
             }
 
@@ -17,6 +20,7 @@
                 justify-content: center;
                 margin-bottom: 20px;
             }
+
 
             .filter-btn button {
                 margin: 0 10px;
@@ -91,6 +95,35 @@
                 margin: 20px 0px 0px 0px;
                 padding: 10px 0px;
                 border-top: 1px solid #333;
+            }
+
+            .btn-primary {
+                background-color: #76a72e;
+                border-color: #76a72e;
+                padding: 10px 20px;
+                font-size: 18px;
+                border-radius: 5px;
+
+                &:active {
+                    background-color: #5c7f2c;
+                    border-color: #5c7f2c;
+                    /* box-shadow: pink; */
+                    /* Remove default shadow */
+                }
+
+                &:hover {
+                    background-color: #5c7f2c;
+                    border-color: #5c7f2c;
+                }
+
+                &:focus {
+                    outline: none;
+                    /* Remove focus outline */
+                    background-color: #5c7f2c;
+                    border: none;
+                    box-shadow: none;
+                    /* Reset background color */
+                }
             }
 
             .foot h2 {
@@ -367,3 +400,5 @@
                 });
             });
         </script>
+
+<%- include('../partials/footer') %>
