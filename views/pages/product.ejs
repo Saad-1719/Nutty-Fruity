@@ -3,6 +3,7 @@
             body {
                 font-family: Arial, sans-serif;
                 background-color: #f8f9fa;
+                overflow-y: scroll;
             }
 
             .heading-container {
@@ -30,7 +31,8 @@
 
             .product-container {
                 display: flex;
-                margin: 50px;
+                /* margin: 50px; */
+                margin: 0px 50px 50px 50px;
                 /* flex-direction: row-reverse; */
             }
 
@@ -86,12 +88,13 @@
             .foot {
                 display: flex;
                 justify-content: space-between;
-                margin: 20px 0px;
+                margin: 20px 0px 0px 0px;
                 padding: 10px 0px;
                 border-top: 1px solid #333;
             }
 
             .foot h2 {
+                margin-top: 6px;
                 font-size: 20px;
                 color: red;
             }
@@ -107,16 +110,6 @@
                 margin: 10px 10px;
             }
 
-            /* .row-img {
-		width: 50px;
-		height: 50px;
-		border-radius: 50px;
-		border: 1px solid goldenrod;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	} */
-
             .rowimg {
                 max-width: 43px;
                 max-height: 43px;
@@ -128,6 +121,7 @@
                 color: #333;
             }
         </style>
+
         <div class="heading-container">
             <h2 class="text-center mb-4">Products</h2>
         </div>
@@ -146,8 +140,8 @@
                 Vegetables
             </button>
         </div>
-        <div class="product-container">
 
+        <div class="product-container">
             <div class="product-list">
                 <div class="row" id="product-list">
                     <% products.forEach((product)=> { %>
@@ -174,6 +168,8 @@
                         <% }) %>
                 </div>
             </div>
+
+
             <div class="cart-container">
                 <div id="root"></div>
                 <div class="sidebar">
@@ -190,10 +186,12 @@
                     <div class="foot">
                         <h3>Total</h3>
                         <h2 id="total">$ 0.00</h2>
-                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                            data-bs-target="#orderModal" id="placeOrderBtn" disabled>
-                            Place Order
+                        <button type="button" class="btn btn-outline-success" id="placeOrderBtn" <% if (userId) { %>
+                            <% } else { %> disabled <% } %> onclick="placeOrder('<%= userId %>')" >
+                                        Place Order
                         </button>
+                        <h2>User: <%= userId %>
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -204,18 +202,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderModalLabel">Order Confirmation</h5>
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                     </div>
                     <div class="modal-body">
                         Your order has been placed successfully! It will be delivered to your
                         address on cash on delivery.
                     </div>
-                    <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div> -->
                 </div>
             </div>
         </div>
+
 
         <script src="https://kit.fontawesome.com/92d70a2fd8.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -226,6 +221,7 @@
         <script>
             let cart = [];
             let total = 0;
+            const userId = '<%= userId %>';
 
             function addtocart(id, image, name, price) {
                 let existingIndex = cart.findIndex((item) => item.name === name);
@@ -278,32 +274,11 @@
                     placeOrderBtn.removeAttribute("disabled");
                 } else {
                     placeOrderBtn.setAttribute("disabled", true);
+                    document.getElementById('cartItem').innerHTML = "Your cart is empty";
                 }
             }
 
-            function placeOrder() {
-                // Show order placed message
-                const orderModal = new bootstrap.Modal(
-                    document.getElementById("orderModal")
-                );
-                orderModal.show();
-
-                setTimeout(() => {
-                    // Empty cart
-                    cart = [];
-                    displaycart();
-
-                    // Close the modal
-                    orderModal.hide();
-
-                    // Redirect to main page after another short delay
-                    setTimeout(() => {
-                        window.location.href = "/"; // Change this to your main page URL
-                    }, 1000); // 1-second delay before redirecting
-                }, 1000); // 1-second delay before emptying the cart
-            }
-
-            function searchProducts() {
+            function searchProducts(userId) {
                 const searchInput = document
                     .getElementById("searchInput")
                     .value.toLowerCase();
@@ -329,10 +304,56 @@
                         addtocart(id, image, name, price);
                     }
                 });
-
-                const placeOrderBtn = document.getElementById("placeOrderBtn");
-                placeOrderBtn.addEventListener("click", placeOrder);
             });
+
+            function displayOrderConfirmationModal() {
+                const orderModal = new bootstrap.Modal(
+                    document.getElementById("orderModal")
+                );
+                orderModal.show();
+
+                // Close the modal after a short delay
+                setTimeout(function () {
+                    orderModal.hide();
+                }, 1000);
+
+                // Redirect to the main page after another short delay
+                setTimeout(function () {
+                    window.location.href = "/";
+                }, 1000);
+            }
+
+            function placeOrder(userId) {
+                if (!userId) {
+                    // User is not logged in, display a message or redirect to the login page
+                    alert('Please login first to place an order.');
+                    window.location.href = "/login"; // Adjust the URL as needed
+
+                    // return
+                } else {
+
+                    $.ajax({
+                        url: '/product',
+                        type: 'POST',
+                        data: {
+                            products: cart, // Assuming cart contains the list of products
+                            total: total // Assuming total contains the total price
+                        },
+                        success: function (response) {
+                            // Empty the cart after successful order placement
+                            cart = [];
+                            displaycart();
+                            displayOrderConfirmationModal();
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error
+                            console.error('Error placing order:', error);
+                            alert('Error placing order. Please try again.');
+                        }
+                    });
+                }
+            }
+
 
             $(document).ready(function () {
                 $(".filter-button").click(function () {
