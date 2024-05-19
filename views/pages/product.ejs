@@ -5,6 +5,7 @@ include('../partials/headerSub') %>
 		font-family: Arial, sans-serif;
 		background-color: #f8f9fa;
 	}
+
 	.heading-container {
 		display: flex;
 		justify-content: center;
@@ -16,10 +17,12 @@ include('../partials/headerSub') %>
 		justify-content: center;
 		margin-bottom: 20px;
 	}
+
 	.filter-btn button {
 		margin: 0 10px;
 		padding: 12px 32px;
 	}
+
 	.product-container {
 		display: flex;
 		/* max-width: 800px; */
@@ -31,7 +34,7 @@ include('../partials/headerSub') %>
 		flex: 1;
 	}
 
-	#count {
+	/* #count {
 		height: 22px;
 		width: 22px;
 		display: flex;
@@ -40,7 +43,14 @@ include('../partials/headerSub') %>
 		border-radius: 22px;
 		background-color: goldenrod;
 		color: white;
+	} */
+	.cart-counter-item {
+		display: flex;
+		justify-content: flex-end;
+		width: 80%;
+		align-items: center;
 	}
+
 	.cart-container {
 		/* margin-top: 90px; */
 		display: flex;
@@ -49,7 +59,9 @@ include('../partials/headerSub') %>
 		flex-direction: row-reverse;
 		justify-content: center;
 	}
+
 	.sidebar {
+        height: max-content;
 		width: 100%;
 		border-radius: 5px;
 		background-color: #eee;
@@ -57,6 +69,7 @@ include('../partials/headerSub') %>
 		padding: 20px;
 		text-align: center;
 	}
+
 	.head {
 		background-color: goldenrod;
 		border-radius: 3px;
@@ -67,6 +80,7 @@ include('../partials/headerSub') %>
 		display: flex;
 		align-items: center;
 	}
+
 	.foot {
 		display: flex;
 		justify-content: space-between;
@@ -79,6 +93,7 @@ include('../partials/headerSub') %>
 		font-size: 20px;
 		color: red;
 	}
+
 	.cart-item {
 		display: flex;
 		align-items: center;
@@ -89,6 +104,7 @@ include('../partials/headerSub') %>
 		border-radius: 3px;
 		margin: 10px 10px;
 	}
+
 	.row-img {
 		width: 50px;
 		height: 50px;
@@ -98,11 +114,13 @@ include('../partials/headerSub') %>
 		align-items: center;
 		justify-content: center;
 	}
+
 	.rowimg {
 		max-width: 43px;
 		max-height: 43px;
 		border-radius: 50%;
 	}
+
 	.fa-trash:hover {
 		cursor: pointer;
 		color: #333;
@@ -137,7 +155,10 @@ include('../partials/headerSub') %>
 		<div class="sidebar">
 			<div class="head">
 				<p>My Cart</p>
-				<p id="count">0</p>
+				<span class="cart-counter-item">
+					<p>Items: &nbsp;</p>
+					<p id="count">0</p>
+				</span>
 			</div>
 			<div id="cartItem">Your cart is empty</div>
 			<div class="foot">
@@ -148,6 +169,8 @@ include('../partials/headerSub') %>
 					class="btn btn-primary"
 					data-bs-toggle="modal"
 					data-bs-target="#orderModal"
+					id="placeOrderBtn"
+					disabled
 				>
 					Place Order
 				</button>
@@ -162,7 +185,7 @@ include('../partials/headerSub') %>
 			<div class="col-md-4" data-category="<%= product.category %>">
 				<div class="card">
 					<img
-						src="<%= product.image %>"
+						src="https://images.unsplash.com/photo-1715939885389-88c4cb93ad2c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 						class="card-img-top"
 						alt="<%= product.name %>"
 					/>
@@ -175,7 +198,7 @@ include('../partials/headerSub') %>
 							data-id="<%= product.id %>"
 							data-name="<%= product.name %>"
 							data-price="<%= product.price %>"
-							data-image="<%= product.image %>"
+							data-image="https://images.unsplash.com/photo-1715939885389-88c4cb93ad2c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 						>
 							Add to Cart
 						</button>
@@ -198,22 +221,15 @@ include('../partials/headerSub') %>
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="orderModalLabel">Order Confirmation</h5>
-				<button
-					type="button"
-					class="btn-close"
-					data-bs-dismiss="modal"
-					aria-label="Close"
-				></button>
+				<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 			</div>
 			<div class="modal-body">
 				Your order has been placed successfully! It will be delivered to your
 				address on cash on delivery.
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-					Close
-				</button>
-			</div>
+			<!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div> -->
 		</div>
 	</div>
 </div>
@@ -229,46 +245,82 @@ include('../partials/headerSub') %>
 
 <script>
 	let cart = [];
+	let total = 0;
+
 	function addtocart(id, image, name, price) {
 		let existingIndex = cart.findIndex((item) => item.name === name);
 		if (existingIndex !== -1) {
-			cart[existingIndex].quantity++; // Increase quantity if item already exists
+			cart[existingIndex].quantity++;
 		} else {
-			const productToAdd = { id, image, name, price, quantity: 1 }; // Add quantity property
-			cart.push(productToAdd); // Add to cart if item doesn't exist
+			const productToAdd = { id, image, name, price, quantity: 1 };
+			cart.push(productToAdd);
 		}
 		displaycart();
 	}
+
 	function delElement(index) {
 		const item = cart[index];
 		if (item.quantity > 1) {
-			item.quantity--; // Decrease quantity by one if greater than 1
+			item.quantity--;
 		} else {
-			cart.splice(index, 1); // Remove item from cart if quantity is 1
+			cart.splice(index, 1);
 		}
 		displaycart();
 	}
+
 	function displaycart() {
-		let total = 0;
 		const cartElement = document.getElementById("cartItem");
 		cartElement.innerHTML = "";
+		total = 0;
 		cart.forEach((item, index) => {
-			const { image, name, price, quantity } = item; // Include quantity
-			total += price * quantity; // Update total calculation
+			const { image, name, price, quantity } = item;
+			total += price * quantity;
 			cartElement.innerHTML += `
-            <div class='cart-item'>
-                <div class='row-img'>
-                    <img class='rowimg' src='${image}'>
-                </div>
-                <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p> <!-- Display quantity -->
-                <h2 style='font-size: 15px;'>$ ${(price * quantity).toFixed(
-									2
-								)}</h2> <!-- Update price -->
-                <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
-            </div>`;
+                <div class='cart-item'>
+                    <div class='row-img'>
+                        <img class='rowimg' src='${image}'>
+                    </div>
+                    <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
+                    <h2 style='font-size: 15px;'>$ ${(price * quantity).toFixed(
+											2
+										)}</h2>
+                    <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
+                </div>`;
 		});
 		document.getElementById("count").textContent = cart.length;
-		document.getElementById("total").textContent = `$ ${total.toFixed(2)}`; // Update total display
+		document.getElementById("total").textContent = `$ ${total.toFixed(2)}`;
+		updatePlaceOrderButton();
+	}
+
+	function updatePlaceOrderButton() {
+		const placeOrderBtn = document.getElementById("placeOrderBtn");
+		if (total > 0) {
+			placeOrderBtn.removeAttribute("disabled");
+		} else {
+			placeOrderBtn.setAttribute("disabled", true);
+		}
+	}
+
+	function placeOrder() {
+		// Show order placed message
+		const orderModal = new bootstrap.Modal(
+			document.getElementById("orderModal")
+		);
+		orderModal.show();
+
+		setTimeout(() => {
+			// Empty cart
+			cart = [];
+			displaycart();
+
+			// Close the modal
+			orderModal.hide();
+
+			// Redirect to main page after another short delay
+			setTimeout(() => {
+				window.location.href = "/"; // Change this to your main page URL
+			}, 1000); // 1-second delay before redirecting
+		}, 1000); // 1-second delay before emptying the cart
 	}
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -282,8 +334,10 @@ include('../partials/headerSub') %>
 				addtocart(id, image, name, price);
 			}
 		});
-	});
 
+		const placeOrderBtn = document.getElementById("placeOrderBtn");
+		placeOrderBtn.addEventListener("click", placeOrder);
+	});
 
 	$(document).ready(function () {
 		$(".filter-button").click(function () {
