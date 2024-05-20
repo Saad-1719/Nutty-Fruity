@@ -1,7 +1,5 @@
 <%- include('../partials/head', {title: 'Page Title' }) %> <%- include('../partials/headerSub') %>
 		<style>
-			* {}
-
 			body {
 				/* background-color: #f8f9fa; */
 				font-family: Arial, sans-serif;
@@ -24,78 +22,90 @@
 				padding: 10px 20px;
 				font-size: 18px;
 				border-radius: 5px;
+			}
 
-				&:active {
-					background-color: #5c7f2c;
-					border-color: #5c7f2c;
-					/* box-shadow: pink; */
-					/* Remove default shadow */
-				}
+			.btn-primary:active,
+			.btn-primary:hover,
+			.btn-primary:focus {
+				background-color: #5c7f2c;
+				border-color: #5c7f2c;
+				outline: none;
+				box-shadow: none;
+			}
 
-				&:hover {
-					background-color: #5c7f2c;
-					border-color: #5c7f2c;
-				}
-
-				&:focus {
-					outline: none;
-					/* Remove focus outline */
-					background-color: #5c7f2c;
-					border: none;
-					box-shadow: none;
-					/* Reset background color */
-				}
+			.alert {
+				background-color: transparent;
+				color: transparent;
+				border: none;
+				transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 			}
 		</style>
-		<% if (errorMessage) { %>
-			<div class="alert alert-danger" role="alert">
-				<%= errorMessage %>
-			</div>
+
+		<div class="login-container">
+			<h2 class="text-center mb-4">Login</h2>
+			<div id="alert" class="alert" role="alert"></div>
+			<!-- Enter Your credentials -->
+
+			<form action="/login" method="POST">
+				<div class="mb-3">
+					<label for="email" class="form-label">Email address</label>
+					<input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+						required />
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" id="password" name="password" required />
+					<!-- Add name attribute -->
+				</div>
+				<div class="text-center"> <!-- Centering div -->
+					<button type="submit" class="btn btn-primary btn-block">Login</button>
+				</div>
+				<!-- <button type="submit" class="btn btn-primary btn-block text-center">Login</button> -->
+			</form>
+			<p class="text-center mt-3">
+				Don't have an account? <a href="/signup">Sign Up</a>
+			</p>
+		</div>
+
+
+		<% if(successMessage || errorMessage) { %>
+			<script>
+				const errorMessage='<%= errorMessage %>'
+				const successMessage='<%= successMessage %>'
+				// var alertDiv = document.getElementById('alert');
+				document.addEventListener("DOMContentLoaded", function() {
+					var alertDiv = document.getElementById('alert');
+			
+					if (errorMessage) { 
+						alertDiv.className = 'alert alert-danger';
+						alertDiv.style.backgroundColor = '#f8d7da';
+						alertDiv.style.color = '#721c24';
+						alertDiv.style.borderColor = '#f5c6cb';
+						alertDiv.innerText = "<%= errorMessage %>";
+					} else if (successMessage) {
+						alertDiv.className = 'alert alert-success';
+						alertDiv.style.backgroundColor = '#d4edda';
+						alertDiv.style.color = '#155724';
+						alertDiv.style.borderColor = '#c3e6cb';
+						alertDiv.innerText = "<%= successMessage %>";
+					}
+				});
+			</script>
+			<% } %>
+			
+		<% if(successMessage) { %>
+			<script>
+				// Redirect to main page after successful login
+				setTimeout(function () {
+					window.location.href = "/";
+				}, 3000); // Redirect after 3 seconds
+			</script>
 			<% } %>
 
-				<!-- Success message -->
-				<% if(successMessage) { %>
-					<div class="alert alert-success" role="alert">
-						<%= successMessage %>
-					</div>
-					<% } %>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+				<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
-						<div class="login-container">
-							<h2 class="text-center mb-4">Login</h2>
-							<form action="/login" method="POST">
-								<div class="mb-3">
-									<label for="email" class="form-label">Email address</label>
-									<input type="email" class="form-control" id="email" name="email"
-										aria-describedby="emailHelp" required />
-								</div>
-								<div class="mb-3">
-									<label for="password" class="form-label">Password</label>
-									<input type="password" class="form-control" id="password" name="password"
-										required />
-									<!-- Add name attribute -->
-								</div>
-								<div class="text-center"> <!-- Centering div -->
-									<button type="submit" class="btn btn-primary btn-block">Login</button>
-								</div>
-								<!-- <button type="submit" class="btn btn-primary btn-block text-center">Login</button> -->
-							</form>	
-							<p class="text-center mt-3">
-								Don't have an account? <a href="/signup">Sign Up</a>
-							</p>
-						</div>
+				<%- include('../partials/footer') %>
 
-						<% if(successMessage) { %>
-							<script>
-								// Redirect to main page after successful login
-								setTimeout(function () {
-									window.location.href = "/";
-								}, 3000); // Redirect after 3 seconds
-							</script>
-							<% } %>
-
-								<script
-									src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-								<script
-									src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-									
-									<%- include('../partials/footer') %>
+			
+				

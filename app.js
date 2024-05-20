@@ -37,18 +37,70 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // render home page
 app.get('/', (req, res) => {
     res.render('pages/index', {
-        title: 'Home'
+        title: 'Home',
+        userId: req.session.userId
     })
 })
 // rendering login page
+// app.get('/login', (req, res) => {
+//     res.render('pages/login', {
+//         title: 'Login',
+//         errorMessage: null, // Initialize errorMessage as null
+//         successMessage: null // Initialize successMessage as null
+//     })
+// })
+// // login route
+// app.post('/login', (req, res) => {
+//     const email = req.body.email;
+//     const password = req.body.password;
+
+//     // Example query to check if the user exists in the database
+//     pool.query('SELECT * FROM users WHERE email = ? AND user_password = ?', [email, password], (error, results, fields) => {
+//         if (error) {
+//             console.error('Error executing query:', error);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
+
+//         if (results.length > 0) {
+//             const userId = results[0].id;
+//             req.session.userId = userId;
+//             res.redirect('/product');
+//             res.render('pages/login', {
+//                 title: 'Login',
+//                 errorMessage: null,
+//                 successMessage: 'Login Successful'
+//             });
+            
+//         } else {
+//             // Render login page with error message
+//             console.log("error login ");
+//             res.render('pages/login', {
+//                 title: 'Login',
+//                 errorMessage: 'Invalid email or password.',
+//                 successMessage: null
+//             });
+//         }
+
+//     });
+// });
+
 app.get('/login', (req, res) => {
+    const successMessage = req.session.successMessage;
+    const errorMessage = req.session.errorMessage;
+
+    // Clear messages from session
+    req.session.successMessage = null;
+    req.session.errorMessage = null;
+
     res.render('pages/login', {
         title: 'Login',
-        errorMessage: null, // Initialize errorMessage as null
-        successMessage: null // Initialize successMessage as null
-    })
-})
-// login route
+        errorMessage: errorMessage || null,
+        successMessage: successMessage || null
+    });
+});
+
+// Login route
 app.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -64,18 +116,16 @@ app.post('/login', (req, res) => {
         if (results.length > 0) {
             const userId = results[0].id;
             req.session.userId = userId;
+            req.session.successMessage = 'Login Successful';
             res.redirect('/product');
         } else {
-            // Render login page with error message
-            res.render('pages/login', {
-                title: 'Login',
-                errorMessage: 'Invalid email or password.',
-                successMessage: null
-            });
+            console.log("error login ");
+            req.session.errorMessage = 'Invalid email or password.';
+            res.redirect('/login');
         }
-
     });
 });
+
 //rending signup page
 app.get('/signup', (req, res) => {
     res.render('pages/signup', {

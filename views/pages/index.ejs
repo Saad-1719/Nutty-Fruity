@@ -1,4 +1,8 @@
-<%- include('../partials/head') %> <%- include('../partials/headerMain') %>
+<%- include('../partials/head') %> 
+<% if (!userId) { %>
+    <%- include('../partials/headerMain') %>
+    
+    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
 
         <style>
             /* Custom Styles */

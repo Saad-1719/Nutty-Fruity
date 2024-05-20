@@ -14,5 +14,6 @@
     "express-session": "^1.18.0",
     "mysql2": "^3.9.7"
   },
+  "devDependencies": {},
   "description": ""
 }
