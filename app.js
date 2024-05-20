@@ -61,42 +61,6 @@ app.post('/login', (req, res) => {
             return;
         }
 
-        // Check if any rows are returned
-        // if (results.length === 0) {
-        //     // Render login page with error message
-        //     res.render('pages/login', {
-        //         title: 'Login',
-        //         errorMessage: 'Invalid email or password.',
-        //         successMessage: null // Set successMessage to null
-        //     });
-        // } else {
-        //     // Render login page with success message
-        //     res.render('pages/login', {
-        //         title: 'Login',
-        //         errorMessage: null, // Set successMessage to null
-        //         successMessage: 'Login successful!'
-        //     });
-        // }
-
-        // Inside the login route
-
-        // if (results.length === 0) {
-        //     // Render login page with error message
-        //     res.render('pages/login', {
-        //         title: 'Login',
-        //         errorMessage: 'Invalid email or password.',
-        //         successMessage: null // Set successMessage to null
-        //     });
-        // } else {
-        //     const userId = results[0].id; // Assuming your user ID column is named 'id'
-        //     res.render('pages/login', {
-        //         title: 'Login',
-        //         errorMessage: null, // Set successMessage to null
-        //         successMessage: 'Login successful!'
-        //     });
-        //     console.log('User ID stored in session:', userId);
-        // }
-
         if (results.length > 0) {
             const userId = results[0].id;
             req.session.userId = userId;
@@ -122,27 +86,16 @@ app.get('/signup', (req, res) => {
 // rendering product page
 app.get('/product', (req, res) => {
 
-    // if (!req.session.userId) {
-    //     // User is not logged in, render product page with a message to login first
-    //     res.render('pages/product', {
-    //         title: 'Product',
-    //         loginMessage: 'Please login first to place an order.'
-    //     });
-    //     return;
-    // }
-
     pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).send('Internal Server Error');
             return;
         }
-
         // Separate categories from the result set
         const categories = results.map(product => product.category);
         // Remove duplicate categories
         const uniqueCategories = [...new Set(categories)];
-
         // Render the page with unique categories and product data
         res.render('pages/product', {
             title: 'Product',
@@ -206,22 +159,6 @@ app.post('/product', (req, res) => {
 
 
 });
-
-
-// app.post('/product', (req, res) => {
-//     const userId = req.session.userId; // Retrieve the user ID from the session
-//     console.log('User ID:', userId);
-//     const { products, total } = req.body; // Assuming products and total are sent in the request body
-//     // Insert the order details into the database
-//     pool.query('INSERT INTO orders (user_id, products, total) VALUES (?, ?, ?)', [userId, products, total], (error, results, fields) => {
-//         if (error) {
-//             console.error('Error placing order:', error);
-//             res.status(500).send('Internal Server Error');
-//             return;
-//         }
-//         res.send('Order placed successfully!');
-//     });
-// });
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`)
