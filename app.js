@@ -1,7 +1,7 @@
 const express = require('express')
 const { title } = require('process')
 const app = express()
-const port = 8080
+const port = 3030
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
@@ -41,49 +41,6 @@ app.get('/', (req, res) => {
         userId: req.session.userId
     })
 })
-// rendering login page
-// app.get('/login', (req, res) => {
-//     res.render('pages/login', {
-//         title: 'Login',
-//         errorMessage: null, // Initialize errorMessage as null
-//         successMessage: null // Initialize successMessage as null
-//     })
-// })
-// // login route
-// app.post('/login', (req, res) => {
-//     const email = req.body.email;
-//     const password = req.body.password;
-
-//     // Example query to check if the user exists in the database
-//     pool.query('SELECT * FROM users WHERE email = ? AND user_password = ?', [email, password], (error, results, fields) => {
-//         if (error) {
-//             console.error('Error executing query:', error);
-//             res.status(500).send('Internal Server Error');
-//             return;
-//         }
-
-//         if (results.length > 0) {
-//             const userId = results[0].id;
-//             req.session.userId = userId;
-//             res.redirect('/product');
-//             res.render('pages/login', {
-//                 title: 'Login',
-//                 errorMessage: null,
-//                 successMessage: 'Login Successful'
-//             });
-            
-//         } else {
-//             // Render login page with error message
-//             console.log("error login ");
-//             res.render('pages/login', {
-//                 title: 'Login',
-//                 errorMessage: 'Invalid email or password.',
-//                 successMessage: null
-//             });
-//         }
-
-//     });
-// });
 
 app.get('/login', (req, res) => {
     const successMessage = req.session.successMessage;
@@ -158,21 +115,21 @@ app.get('/product', (req, res) => {
 });
 
 app.post('/product', (req, res) => {
-
-    // Check if the user is logged in
+    const userId = req.session.userId;
+    const { total, products } = req.body;
+    //     // Check if the user is logged in
     if (!req.session.userId) {
         // User is not logged in, return an error response
         res.status(401).send('Unauthorized: Please login first.');
         return;
     }
 
-    const userId = req.session.userId;
-    const { products, total } = req.body;
     const productsJSON = JSON.stringify(products);
+
+    // Insert into orders table
 
     console.log('User ID:', userId);
     console.log('Total:', total);
-    // Insert the order details into the database
     pool.query('INSERT INTO orders (user_id, total) VALUES (?, ?)', [userId, total], (error, results, fields) => {
         if (error) {
             console.error('Error placing order:', error);
@@ -180,18 +137,10 @@ app.post('/product', (req, res) => {
             return;
         }
         console.log('Order placed successfully!');
-        res.send('Order placed successfully!');
-    });
-
-    pool.query('select order_id from orders where user_id = ?', [userId], (error, results, fields) => {
-        if (error) {
-            console.error('Error finding order_id:', error);
-            // res.status(500).send('Internal Server Error');
-            return;
-        }
-        const user_order_id = results[results.length - 1].order_id;
+        // res.send('Order placed successfully!');
+        // Get the inserted order_id
+        const user_order_id = results.insertId;
         console.log('Order ID:', user_order_id);
-
         products.forEach(product => {
             const { name, price, quantity } = product;
 
@@ -204,12 +153,118 @@ app.post('/product', (req, res) => {
                 console.log('Product inserted successfully:', product);
             });
         });
+        // Send a success response after all queries
+        res.send('Order placed successfully!');
     });
-
-
-
 });
+
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`)
 })
+
+// app.get('/account', (req, res) => {
+//     const userId = req.session.userId;
+
+//     pool.query(
+//         'SELECT orders.order_id, order_details.product_name, order_details.quantity, orders.total, orders.order_date FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id where orders.user_id= ?', [userId],
+//         (error, results, fields) => {
+//             if (error) {
+//                 console.error('Error executing query:', error);
+//                 res.status(500).send('Internal Server Error');
+//                 return;
+//             }
+
+//             // Structuring the data
+//             const ordersMap = results.reduce((acc, row) => {
+//                 if (!acc[row.order_id]) {
+//                     acc[row.order_id] = {
+//                         order_id: row.order_id,
+//                         order_date: row.order_date,
+//                         total: row.total,
+//                         products: []
+//                     };
+//                 }
+//                 acc[row.order_id].products.push({
+//                     product_name: row.product_name,
+//                     quantity: row.quantity
+//                 });
+//                 return acc;
+//             }, {});
+
+//             var ordersArray = Object.values(ordersMap);
+//             console.log(ordersArray);
+//             res.render('pages/account', {
+//                 title: 'Account',
+//                 orders: ordersArray, // Ensure `orders` is passed here
+//             });
+//             req.session.destroy((err) => {
+//                 if (err) {
+//                     console.error('Error destroying session:', err);
+//                     // return res.redirect('/product'); // Redirect to another page if logout fails
+//                 }
+//                 // res.redirect('/login');
+//                 ordersArray = []
+//             });
+//         }
+//     );
+// });
+
+
+app.get('/account', (req, res) => {
+    const userId = req.session.userId;
+
+    pool.query(
+        'SELECT orders.order_id, order_details.product_name, order_details.quantity, orders.total, orders.order_date FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id WHERE orders.user_id = ?', [userId],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Structuring the data
+            const ordersMap = results.reduce((acc, row) => {
+                if (!acc[row.order_id]) {
+                    acc[row.order_id] = {
+                        order_id: row.order_id,
+                        order_date: row.order_date,
+                        total: row.total,
+                        products: []
+                    };
+                }
+
+                // Find if the product already exists in the products array
+                const existingProduct = acc[row.order_id].products.find(product => product.product_name === row.product_name);
+
+                if (existingProduct) {
+                    // If the product exists, add the quantity
+                    existingProduct.quantity += row.quantity;
+                } else {
+                    // If the product does not exist, add it to the products array
+                    acc[row.order_id].products.push({
+                        product_name: row.product_name,
+                        quantity: row.quantity
+                    });
+                }
+
+                return acc;
+            }, {});
+
+            var ordersArray = Object.values(ordersMap);
+            console.log(ordersArray);
+            res.render('pages/account', {
+                title: 'Account',
+                orders: ordersArray, // Ensure `orders` is passed here
+            });
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error('Error destroying session:', err);
+                    // return res.redirect('/product'); // Redirect to another page if logout fails
+                }
+                // res.redirect('/login');
+                ordersArray = [];
+            });
+        }
+    );
+});
