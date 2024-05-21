@@ -1,0 +1,136 @@
+<%- include('../partials/head', { title: 'Your Page Title' }) %>
+    <%- include('../partials/headerSub') %>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(to bottom, #d2b48c, #ceffc7);
+                overflow-y: scroll;
+            }
+
+            .heading-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 30px;
+            }
+
+            /* .order-info-class {
+                display: flex;
+                margin: 0px 50px 50px 50px;
+            } */
+
+            .order-innfo-list {
+                flex: 1;
+            }
+
+            .head span {
+                margin-top: 15px;
+            }
+
+            .row {
+                --bs-gutter-x: 1.5rem;
+                --bs-gutter-y: 1.5rem;
+            }
+
+            .btn-primary {
+                background-color: #76a72e;
+                border-color: #76a72e;
+                padding: 10px 20px;
+                font-size: 18px;
+                border-radius: 5px;
+            }
+
+            .btn-primary:active,
+            .btn-primary:hover,
+            .btn-primary:focus {
+                background-color: #5c7f2c;
+                border-color: #5c7f2c;
+                outline: none;
+                box-shadow: none;
+            }
+
+            .order-info-class {
+    padding: 20px;
+}
+
+.order-innfo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-row {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-details h5 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.order-details p {
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+.order-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-details ul li {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+        </style>
+
+        <div class="heading-container">
+            <h2 class="text-center mb-4">Orders</h2>
+        </div>
+        <div class="order-info-class">
+            <div class="order-innfo-list">
+                <% if (orders && orders.length) { %>
+                    <% orders.forEach(order => { %>
+                        <div class="order-row">
+                            <div class="order-details">
+                                <h5>Order Date: <%= order.order_date %></h5>
+                                <p>Total: <%= order.total %></p>
+                                <ul>
+                                    <% order.products.forEach(product => { %>
+                                        <li><%= product.product_name %>: <%= product.quantity %></li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No orders found.</p>
+                <% } %>
+            </div>
+        </div>
+        
+
+        <!-- <div>
+    <%- JSON.stringify(orders) %>
+</div> -->
+        <div class="container">
+            <form action="/login" method="GET">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+        <%- include('../partials/footer') %>
