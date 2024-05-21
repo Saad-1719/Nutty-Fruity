@@ -163,54 +163,6 @@ app.listen(port, () => {
     console.log(`App listening at port ${port}`)
 })
 
-// app.get('/account', (req, res) => {
-//     const userId = req.session.userId;
-
-//     pool.query(
-//         'SELECT orders.order_id, order_details.product_name, order_details.quantity, orders.total, orders.order_date FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id where orders.user_id= ?', [userId],
-//         (error, results, fields) => {
-//             if (error) {
-//                 console.error('Error executing query:', error);
-//                 res.status(500).send('Internal Server Error');
-//                 return;
-//             }
-
-//             // Structuring the data
-//             const ordersMap = results.reduce((acc, row) => {
-//                 if (!acc[row.order_id]) {
-//                     acc[row.order_id] = {
-//                         order_id: row.order_id,
-//                         order_date: row.order_date,
-//                         total: row.total,
-//                         products: []
-//                     };
-//                 }
-//                 acc[row.order_id].products.push({
-//                     product_name: row.product_name,
-//                     quantity: row.quantity
-//                 });
-//                 return acc;
-//             }, {});
-
-//             var ordersArray = Object.values(ordersMap);
-//             console.log(ordersArray);
-//             res.render('pages/account', {
-//                 title: 'Account',
-//                 orders: ordersArray, // Ensure `orders` is passed here
-//             });
-//             req.session.destroy((err) => {
-//                 if (err) {
-//                     console.error('Error destroying session:', err);
-//                     // return res.redirect('/product'); // Redirect to another page if logout fails
-//                 }
-//                 // res.redirect('/login');
-//                 ordersArray = []
-//             });
-//         }
-//     );
-// });
-
-
 app.get('/account', (req, res) => {
     const userId = req.session.userId;
 
@@ -228,7 +180,10 @@ app.get('/account', (req, res) => {
                 if (!acc[row.order_id]) {
                     acc[row.order_id] = {
                         order_id: row.order_id,
-                        order_date: row.order_date,
+                        // order_date: row.order_date,
+                        order_date: new Date(row.order_date).toLocaleDateString('en-US', { timeZone: 'Asia/Karachi' }),
+                        // order_date: new Date(row.order_date).toLocaleString('en-US', { timeZone: 'Asia/Karachi', timeZoneName: 'short', weekday: 'short', month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+
                         total: row.total,
                         products: []
                     };
