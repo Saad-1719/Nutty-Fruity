@@ -3,14 +3,9 @@
     <%- include('../partials/headerMain') %>
     
     <% } else { %> <%- include('../partials/headerSub') %> <% } %>
+	<link rel="stylesheet" href="/css/style.css">
 
 		<style>
-			body {
-				/* background-color: #f8f9fa; */
-				font-family: Arial, sans-serif;
-				background: linear-gradient(to bottom, #d2b48c, #ceffc7);
-
-			}
 
 			.login-container {
 				max-width: 473px;
@@ -23,22 +18,6 @@
 
 				min-height: 85vh;
 			}
-			.btn-primary {
-				background-color: #76a72e;
-				border-color: #76a72e;
-				padding: 10px 20px;
-				font-size: 18px;
-				border-radius: 5px;
-			}
-
-			.btn-primary:active,
-			.btn-primary:hover,
-			.btn-primary:focus {
-				background-color: #5c7f2c;
-				border-color: #5c7f2c;
-				outline: none;
-				box-shadow: none;
-			}
 
 			.alert {
 				background-color: transparent;
@@ -47,9 +26,9 @@
 				transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 			}
 		</style>
+		
 		<section class="login-form">
-
-			
+	
 			<div class="login-container">
 			<h2 class="text-center mb-4">Login</h2>
 			<div id="alert" class="alert" role="alert"></div>

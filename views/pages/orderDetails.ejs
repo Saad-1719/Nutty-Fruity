@@ -1,162 +1,144 @@
-<%- include('../partials/head') %> 
-<% if (!userId) { %>
-    <%- include('../partials/headerMain') %>
-    
-    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
+<%- include('../partials/head') %>
+    <% if (!userId) { %>
+        <%- include('../partials/headerMain') %>
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background: linear-gradient(to bottom, #d2b48c, #ceffc7);
-                overflow-y: scroll;
-            }
-
-            .heading-container {
-                display: flex;
-                justify-content: center;
-                margin-top: 30px;
-            }
-
-
-            .order-innfo-list {
-                flex: 1;
-            }
-
-            .head span {
-                margin-top: 15px;
-            }
-
-            .row {
-                --bs-gutter-x: 1.5rem;
-                --bs-gutter-y: 1.5rem;
-            }
-
-            .btn-primary {
-                background-color: #76a72e;
-                border-color: #76a72e;
-                padding: 10px 20px;
-                font-size: 18px;
-                border-radius: 5px;
-            }
-
-            .btn-primary:active,
-            .btn-primary:hover,
-            .btn-primary:focus {
-                background-color: #5c7f2c;
-                border-color: #5c7f2c;
-                outline: none;
-                box-shadow: none;
-            }
-
-            .order-info-class {
-                padding: 20px;
-            }
-
-            .order-innfo-list {
-
-                display: grid;
-                gap: 20px;
-                grid-template-columns: 300px 300px 300px;
-                justify-content: center;
-            }
-
-            .order-row {
-
-                display: grid;
-                flex-direction: column;
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                padding: 15px;
-                align-items: center;
-                justify-content: space-evenly;
-                background-color: #f9f9f9;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .order-details {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .order-details h5 {
-                font-size: 1.2em;
-                margin-bottom: 10px;
-            }
-
-            .order-details p {
-                font-size: 1em;
-                margin-bottom: 4px;
-            }
-
-            .order-details ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            .order-details ul li {
-                font-size: 0.9em;
-                margin-bottom: 5px;
-            }
-
-            #no_order {
-                text-align: center;
-            }
-
-            .logout_btn_container {
-                display: flex;
-                align-items: center;
-                padding-top: 50px;
-                justify-content: center;
-            }
-
-            .main_section {
-                min-height: 90vh;
-            }
-        </style>
-        <section class="main_section">
-            <div class="heading-container">
-                <h2 class="text-center mb-4">Orders</h2>
-            </div>
-
-            <div class="order-info-class">
-                <div class="order-innfo-list">
-                    <% if (orders && orders.length) { %>
-                        <% orders.forEach(order=> { %>
-                            <div class="order-row">
-                                <div class="order-details">
-                                    <b>Order Date: <%= order.order_date %></b>
-                                    <p><b>Total:</b>
-                                        <%= order.total %>
-                                    </p>
-                                    <ul>
-                                        <% order.products.forEach(product=> { %>
-                                            <li><b>
-                                                    <%= product.product_name %>:
-                                                </b>
-                                                <%= product.quantity %>
-                                            </li>
-                                            <% }) %>
-                                    </ul>
-                                </div>
-                            </div>
-                            <% }) %>
-
-                </div>
-
-                <% } else { %>
-                    <p id="no_order">
-                    <h3 style="text-align: center;">No orders found.</h3>
-                    </p>
+            <% } else { %> <%- include('../partials/headerSub') %>
                     <% } %>
-            </div>
 
-        </section>
+                        <link rel="stylesheet" href="/css/style.css">
+
+                        <style>
+                            .heading-container {
+                                display: flex;
+                                justify-content: center;
+                                margin-top: 30px;
+                            }
+
+
+                            .order-innfo-list {
+                                flex: 1;
+                            }
+
+                            .head span {
+                                margin-top: 15px;
+                            }
+
+                            .row {
+                                --bs-gutter-x: 1.5rem;
+                                --bs-gutter-y: 1.5rem;
+                            }
+
+                            .order-info-class {
+                                padding: 20px;
+                            }
+
+                            .order-innfo-list {
+
+                                display: grid;
+                                gap: 20px;
+                                grid-template-columns: 300px 300px 300px;
+                                justify-content: center;
+                            }
+
+                            .order-row {
+
+                                display: grid;
+                                flex-direction: column;
+                                border: 1px solid #ccc;
+                                border-radius: 10px;
+                                padding: 15px;
+                                align-items: center;
+                                justify-content: space-evenly;
+                                background-color: #f9f9f9;
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                            }
+
+                            .order-details {
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                            }
+
+                            .order-details h5 {
+                                font-size: 1.2em;
+                                margin-bottom: 10px;
+                            }
+
+                            .order-details p {
+                                font-size: 1em;
+                                margin-bottom: 4px;
+                            }
+
+                            .order-details ul {
+                                list-style: none;
+                                padding: 0;
+                                margin: 0;
+                            }
+
+                            .order-details ul li {
+                                font-size: 0.9em;
+                                margin-bottom: 5px;
+                            }
+
+                            #no_order {
+                                text-align: center;
+                            }
+
+                            .logout_btn_container {
+                                display: flex;
+                                align-items: center;
+                                padding-top: 50px;
+                                justify-content: center;
+                            }
+
+                            .main_section {
+                                min-height: 80vh;
+                            }
+                        </style>
+
+                        <section class="main_section">
+                            <div class="heading-container">
+                                <h2 class="text-center mb-4">Orders</h2>
+                            </div>
+
+                            <div class="order-info-class">
+                                <div class="order-innfo-list">
+                                    <% if (orders && orders.length) { %>
+                                        <% orders.forEach(order=> { %>
+                                            <div class="order-row">
+                                                <div class="order-details">
+                                                    <b>Order Date: <%= order.order_date %></b>
+                                                    <p><b>Total:</b>
+                                                        <%= order.total %>
+                                                    </p>
+                                                    <ul>
+                                                        <% order.products.forEach(product=> { %>
+                                                            <li><b>
+                                                                    <%= product.product_name %>:
+                                                                </b>
+                                                                <%= product.quantity %>
+                                                            </li>
+                                                            <% }) %>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+
+                                </div>
+
+                                <% } else { %>
+                                    <p id="no_order">
+                                    <h3 style="text-align: center;">No orders found.</h3>
+                                    </p>
+                                    <% } %>
+                            </div>
+
+                        </section>
 
 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-        <%- include('../partials/footer') %>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                        <script
+                            src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+                        <%- include('../partials/footer') %>

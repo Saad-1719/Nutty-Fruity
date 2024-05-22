@@ -21,6 +21,9 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/product">Products</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/account">Account</a>
                 </li>
                 <li class="nav-item">
@@ -34,3 +37,15 @@
         </div>
     </div>
 </nav>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.parentElement.style.display = "none";
+            }
+        });
+    });
+</script>

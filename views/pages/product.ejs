@@ -1,14 +1,11 @@
-<%- include('../partials/head', {title: 'Page Title' }) %> <%- include('../partials/headerSub') %>
+<%- include('../partials/head') %>
+    <% if (!userId) { %>
+        <%- include('../partials/headerMain') %>
+
+            <% } else { %> <%- include('../partials/headerSub') %>
+                    <% } %>
+        <link rel="stylesheet" href="/css/style.css">
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                /* background-color: #f8f9fa; */
-                /* background: radial-gradient(circle at center, #ff0000, #ceffc7); */
-                background: linear-gradient(to bottom, #d2b48c, #ceffc7);
-
-                overflow-y: scroll;
-            }
-
             .heading-container {
                 display: flex;
                 justify-content: center;
@@ -20,7 +17,6 @@
                 justify-content: center;
                 margin-bottom: 20px;
             }
-
 
             .filter-btn button {
                 margin: 0 10px;
@@ -97,34 +93,6 @@
                 border-top: 1px solid #333;
             }
 
-            .btn-primary {
-                background-color: #76a72e;
-                border-color: #76a72e;
-                padding: 10px 20px;
-                font-size: 18px;
-                border-radius: 5px;
-
-                &:active {
-                    background-color: #5c7f2c;
-                    border-color: #5c7f2c;
-                    /* box-shadow: pink; */
-                    /* Remove default shadow */
-                }
-
-                &:hover {
-                    background-color: #5c7f2c;
-                    border-color: #5c7f2c;
-                }
-
-                &:focus {
-                    outline: none;
-                    /* Remove focus outline */
-                    background-color: #5c7f2c;
-                    border: none;
-                    box-shadow: none;
-                    /* Reset background color */
-                }
-            }
 
             .foot h2 {
                 margin-top: 6px;
@@ -162,7 +130,7 @@
             <input type="text" id="searchInput" class="form-control" placeholder="Search products by name"
                 onkeyup="searchProducts()" />
         </div>
-        
+
         <div class="filter-btn">
             <button class="btn btn-primary filter-button show-button" product-category="all">
                 All
@@ -182,15 +150,13 @@
                         <div class="col-md-4 product-item" data-category="<%= product.category %>"
                             data-name="<%= product.name.toLowerCase() %>">
                             <div class="card text-center">
-                                <img src="<%= product.image %>"
-                                    class="card-img-top" alt="<%= product.name %>" />
+                                <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>" />
                                 <div class="card-body">
                                     <h5 class="card-title mb-2">
                                         <%= product.name %>
                                     </h5>
                                     <p class="card-text mb-2">Weight: <%= product.weight %> kg</p>
-                                    <p class="card-text mb-2">Price: <%= product.price %> PKR
-                                    </p>
+                                    <p class="card-text mb-2">Price: <%= product.price %> PKR</p>
                                     <button class="btn btn-primary add-to-cart-btn mt-auto" data-id="<%= product.id %>"
                                         data-name="<%= product.name %>" data-price="<%= product.price %>"
                                         data-image="<%= product.image %>">
@@ -202,7 +168,6 @@
                         <% }) %>
                 </div>
             </div>
-
 
             <div class="cart-container">
                 <div id="root"></div>
@@ -221,8 +186,8 @@
                         <h3>Total</h3>
                         <h2 id="total">PKR 0.00</h2>
                         <button type="button" class="btn btn-outline-success" id="placeOrderBtn" <% if (userId) { %>
-                            <% } else { %> disabled <% } %> onclick="placeOrder('<%= userId %>')" >
-                                        Place Order
+                            <% } else { %> disabled <% } %> onclick="placeOrder('<%= userId %>')"
+                                        > Place Order
                         </button>
                         <h2>User: <%= userId %>
                         </h2>
@@ -245,7 +210,6 @@
             </div>
         </div>
 
-
         <script src="https://kit.fontawesome.com/92d70a2fd8.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
@@ -255,13 +219,15 @@
         <script>
             let cart = [];
             let total = 0;
-            const userId = '<%= userId %>';
+            const userId = "<%= userId %>";
 
             function addtocart(id, image, name, price) {
                 let existingIndex = cart.findIndex((item) => item.name === name);
-                if (existingIndex !== -1) {
+                if (existingIndex !== -1)
+                {
                     cart[existingIndex].quantity++;
-                } else {
+                } else
+                {
                     const productToAdd = { id, image, name, price, quantity: 1 };
                     cart.push(productToAdd);
                 }
@@ -270,9 +236,11 @@
 
             function delElement(index) {
                 const item = cart[index];
-                if (item.quantity > 1) {
+                if (item.quantity > 1)
+                {
                     item.quantity--;
-                } else {
+                } else
+                {
                     cart.splice(index, 1);
                 }
                 displaycart();
@@ -291,9 +259,9 @@
                         <img class='rowimg' src='${image}'>
                     </div>
                     <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
-                    <h2 style='font-size: 15px;'>PKR ${(price * quantity).toFixed(
-                        2
-                    )}</h2>
+                    <h2 style='font-size: 15px;'>PKR ${(
+                            price * quantity
+                        ).toFixed(2)}</h2>
                     <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
                 </div>`;
                 });
@@ -304,11 +272,13 @@
 
             function updatePlaceOrderButton() {
                 const placeOrderBtn = document.getElementById("placeOrderBtn");
-                if (total > 0) {
+                if (total > 0)
+                {
                     placeOrderBtn.removeAttribute("disabled");
-                } else {
+                } else
+                {
                     placeOrderBtn.setAttribute("disabled", true);
-                    document.getElementById('cartItem').innerHTML = "Your cart is empty";
+                    document.getElementById("cartItem").innerHTML = "Your cart is empty";
                 }
             }
 
@@ -319,9 +289,11 @@
                 const productItems = document.querySelectorAll(".product-item");
                 productItems.forEach((item) => {
                     const productName = item.getAttribute("data-name");
-                    if (productName.includes(searchInput)) {
+                    if (productName.includes(searchInput))
+                    {
                         item.style.display = "";
-                    } else {
+                    } else
+                    {
                         item.style.display = "none";
                     }
                 });
@@ -330,7 +302,8 @@
             document.addEventListener("DOMContentLoaded", function () {
                 const productList = document.getElementById("product-list");
                 productList.addEventListener("click", function (event) {
-                    if (event.target.classList.contains("add-to-cart-btn")) {
+                    if (event.target.classList.contains("add-to-cart-btn"))
+                    {
                         const id = parseInt(event.target.dataset.id);
                         const image = event.target.dataset.image;
                         const name = event.target.dataset.name;
@@ -358,20 +331,21 @@
             }
 
             function placeOrder(userId) {
-                if (!userId) {
+                if (!userId)
+                {
                     // User is not logged in, display a message or redirect to the login page
-                    alert('Please login first to place an order.');
+                    alert("Please login first to place an order.");
                     window.location.href = "/login"; // Adjust the URL as needed
 
                     // return
-                } else {
-
+                } else
+                {
                     $.ajax({
-                        url: '/product',
-                        type: 'POST',
+                        url: "/product",
+                        type: "POST",
                         data: {
                             products: cart, // Assuming cart contains the list of products
-                            total: total // Assuming total contains the total price
+                            total: total, // Assuming total contains the total price
                         },
                         success: function (response) {
                             // Empty the cart after successful order placement
@@ -381,20 +355,21 @@
                         },
                         error: function (xhr, status, error) {
                             // Handle error
-                            console.error('Error placing order:', error);
-                            alert('Error placing order. Please try again.');
-                        }
+                            console.error("Error placing order:", error);
+                            alert("Error placing order. Please try again.");
+                        },
                     });
                 }
             }
 
-
             $(document).ready(function () {
                 $(".filter-button").click(function () {
                     var category = $(this).attr("product-category");
-                    if (category === "all") {
+                    if (category === "all")
+                    {
                         $("[data-category]").show();
-                    } else {
+                    } else
+                    {
                         $("[data-category]").hide();
                         $('[data-category="' + category + '"]').show();
                     }
@@ -402,4 +377,4 @@
             });
         </script>
 
-<%- include('../partials/footer') %>
+        <%- include('../partials/footer') %>

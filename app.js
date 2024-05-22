@@ -11,13 +11,15 @@ const { localsName } = require("ejs");
 
 //setting view engine
 app.set("view engine", "ejs");
+app.use(express.static('public'));
 
 
 app.use(
 	session({
 		secret: "your_secret_key",
 		resave: false,
-		saveUninitialized: true,
+        saveUninitialized: true,
+        cookie: { maxAge: 300000 }
 	})
 );
 
