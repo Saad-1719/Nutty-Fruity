@@ -93,7 +93,7 @@ app.get('/signup', (req, res) => {
 // rendering product page
 app.get('/product', (req, res) => {
 
-    pool.query('SELECT name, image_data, weight, price, category FROM products', (error, results, fields) => {
+    pool.query('SELECT name, image, weight, price, category FROM products', (error, results, fields) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).send('Internal Server Error');
@@ -163,17 +163,19 @@ app.listen(port, () => {
     console.log(`App listening at port ${port}`)
 })
 
-app.get('/account', (req, res) => {
+app.get('/orderDetails', (req, res) => {
     const userId = req.session.userId;
 
     pool.query(
         'SELECT orders.order_id, order_details.product_name, order_details.quantity, orders.total, orders.order_date FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id WHERE orders.user_id = ?', [userId],
+
         (error, results, fields) => {
             if (error) {
                 console.error('Error executing query:', error);
                 res.status(500).send('Internal Server Error');
                 return;
             }
+
 
             // Structuring the data
             const ordersMap = results.reduce((acc, row) => {
@@ -188,6 +190,8 @@ app.get('/account', (req, res) => {
                         products: []
                     };
                 }
+
+
 
                 // Find if the product already exists in the products array
                 const existingProduct = acc[row.order_id].products.find(product => product.product_name === row.product_name);
@@ -206,20 +210,61 @@ app.get('/account', (req, res) => {
                 return acc;
             }, {});
 
+
+
             var ordersArray = Object.values(ordersMap);
-            console.log(ordersArray);
-            res.render('pages/account', {
+            // console.log(ordersArray);
+            // console.log(account_info);
+            res.render('pages/orderDetails', {
                 title: 'Account',
-                orders: ordersArray, // Ensure `orders` is passed here
+                orders: ordersArray
+
             });
-            req.session.destroy((err) => {
-                if (err) {
-                    console.error('Error destroying session:', err);
-                    // return res.redirect('/product'); // Redirect to another page if logout fails
-                }
-                // res.redirect('/login');
-                ordersArray = [];
-            });
+            // req.session.destroy((err) => {
+                //     if (err) {
+                //         console.error('Error destroying session:', err);
+                //         // return res.redirect('/product'); // Redirect to another page if logout fails
+                //     }
+                //     ordersArray = [];
+                //     // res.redirect('/login');
+                // });
+
+
         }
     );
 });
+
+
+app.get('/account', (req, res) => {
+    const userId = req.session.userId;
+
+    pool.query('SELECT email, shipping_address FROM users WHERE id = ?', [userId], (error, account_info, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        const firstAccountInfo = account_info[0]; // Access the first object in the array   
+
+        // console.log(ordersArray);
+        // console.log(account_info);
+        res.render('pages/account', {
+            title: 'Account',
+            // orders: ordersArray, // Ensure `orders` is passed here
+            // info: { email, shipping_address } // Pass email and shipping_address as an object
+            info: firstAccountInfo // Pass email and shipping_address as an object
+
+        });
+        req.session.destroy((err) => {
+                    if (err) {
+                        console.error('Error destroying session:', err);
+                        // return res.redirect('/product'); // Redirect to another page if logout fails
+                    }
+                    // ordersArray = [];
+                    // res.redirect('/login');
+                });
+
+    }
+    );
+});
+
