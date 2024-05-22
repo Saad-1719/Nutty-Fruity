@@ -53,7 +53,9 @@ app.get('/login', (req, res) => {
     res.render('pages/login', {
         title: 'Login',
         errorMessage: errorMessage || null,
-        successMessage: successMessage || null
+        successMessage: successMessage || null,
+        userId: req.session.userId // Pass userId to frontend
+
     });
 });
 
@@ -87,12 +89,14 @@ app.post('/login', (req, res) => {
 app.get('/signup', (req, res) => {
     res.render('pages/signup', {
         // user,
-        title: 'Signup'
+        title: 'Signup',
+        userId: req.session.userId // Pass userId to frontend
+
     })
 })
 // rendering product page
 app.get('/product', (req, res) => {
-
+    // const userId = req.session.userId;
     pool.query('SELECT name, image, weight, price, category FROM products', (error, results, fields) => {
         if (error) {
             console.error('Error executing query:', error);
@@ -117,7 +121,8 @@ app.get('/product', (req, res) => {
 app.post('/product', (req, res) => {
     const userId = req.session.userId;
     const { total, products } = req.body;
-    //     // Check if the user is logged in
+
+    // Check if the user is logged in
     if (!req.session.userId) {
         // User is not logged in, return an error response
         res.status(401).send('Unauthorized: Please login first.');
@@ -127,9 +132,9 @@ app.post('/product', (req, res) => {
     const productsJSON = JSON.stringify(products);
 
     // Insert into orders table
-
     console.log('User ID:', userId);
     console.log('Total:', total);
+
     pool.query('INSERT INTO orders (user_id, total) VALUES (?, ?)', [userId, total], (error, results, fields) => {
         if (error) {
             console.error('Error placing order:', error);
@@ -137,27 +142,50 @@ app.post('/product', (req, res) => {
             return;
         }
         console.log('Order placed successfully!');
-        // res.send('Order placed successfully!');
+
         // Get the inserted order_id
         const user_order_id = results.insertId;
         console.log('Order ID:', user_order_id);
+
+        let updateCount = 0;
+        let errorOccurred = false;
+
         products.forEach(product => {
             const { name, price, quantity } = product;
 
-            pool.query('INSERT INTO order_details ( order_id, product_name, price_single_item, quantity) VALUES ( ?, ?, ?, ?)', [user_order_id, name, price, quantity], (error, results, fields) => {
+            // Insert into order_details table
+            pool.query('INSERT INTO order_details (order_id, product_name, price_single_item, quantity) VALUES (?, ?, ?, ?)', [user_order_id, name, price, quantity], (error, results, fields) => {
                 if (error) {
                     console.error('Error placing insertion:', error);
-                    res.status(500).send('Internal Server Error');
+                    if (!errorOccurred) {
+                        errorOccurred = true;
+                        res.status(500).send('Internal Server Error');
+                    }
                     return;
                 }
                 console.log('Product inserted successfully:', product);
+
+                pool.query('UPDATE products SET remaining_quantity = remaining_quantity - ? WHERE name = ?', [quantity, name], (error) => {
+                    if (error) {
+                        console.error('Error updating product quantity:', error);
+                        if (!errorOccurred) {
+                            errorOccurred = true;
+                            res.status(500).send('Internal Server Error');
+                        }
+                        return;
+                    }
+                    console.log('Product quantity updated successfully for product:', name);
+
+                    updateCount++;
+                    // Send success response after all updates are done
+                    if (updateCount === products.length && !errorOccurred) {
+                        res.send('Order placed successfully!');
+                    }
+                });
             });
         });
-        // Send a success response after all queries
-        res.send('Order placed successfully!');
     });
 });
-
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`)
@@ -217,17 +245,19 @@ app.get('/orderDetails', (req, res) => {
             // console.log(account_info);
             res.render('pages/orderDetails', {
                 title: 'Account',
-                orders: ordersArray
+                orders: ordersArray,
+                userId: req.session.userId // Pass userId to frontend
+
 
             });
             // req.session.destroy((err) => {
-                //     if (err) {
-                //         console.error('Error destroying session:', err);
-                //         // return res.redirect('/product'); // Redirect to another page if logout fails
-                //     }
-                //     ordersArray = [];
-                //     // res.redirect('/login');
-                // });
+            //     if (err) {
+            //         console.error('Error destroying session:', err);
+            //         // return res.redirect('/product'); // Redirect to another page if logout fails
+            //     }
+            //     ordersArray = [];
+            //     // res.redirect('/login');
+            // });
 
 
         }
@@ -252,19 +282,24 @@ app.get('/account', (req, res) => {
             title: 'Account',
             // orders: ordersArray, // Ensure `orders` is passed here
             // info: { email, shipping_address } // Pass email and shipping_address as an object
-            info: firstAccountInfo // Pass email and shipping_address as an object
+            info: firstAccountInfo,
+            userId: req.session.userId // Pass userId to frontend
+            // Pass email and shipping_address as an object
 
         });
-        req.session.destroy((err) => {
-                    if (err) {
-                        console.error('Error destroying session:', err);
-                        // return res.redirect('/product'); // Redirect to another page if logout fails
-                    }
-                    // ordersArray = [];
-                    // res.redirect('/login');
-                });
 
     }
     );
 });
+app.post('/account', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            // return res.redirect('/product'); // Redirect to another page if logout fails
+        }
+        // ordersArray = [];
+        res.redirect('/login');
+    });
+
+})
 
