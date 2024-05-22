@@ -146,7 +146,7 @@
             .rowimg {
                 max-width: 43px;
                 max-height: 43px;
-                border-radius: 50%;
+                /* border-radius: 50%; */
             }
 
             .fa-trash:hover {
@@ -182,18 +182,18 @@
                         <div class="col-md-4 product-item" data-category="<%= product.category %>"
                             data-name="<%= product.name.toLowerCase() %>">
                             <div class="card text-center">
-                                <img src="https://images.unsplash.com/photo-1715939885389-88c4cb93ad2c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                <img src="<%= product.image %>"
                                     class="card-img-top" alt="<%= product.name %>" />
                                 <div class="card-body">
                                     <h5 class="card-title mb-2">
                                         <%= product.name %>
                                     </h5>
-                                    <p class="card-text mb-2">Weight: <%= product.weight %> g</p>
-                                    <p class="card-text mb-2">Price: <%= product.price %>
+                                    <p class="card-text mb-2">Weight: <%= product.weight %> kg</p>
+                                    <p class="card-text mb-2">Price: <%= product.price %> PKR
                                     </p>
                                     <button class="btn btn-primary add-to-cart-btn mt-auto" data-id="<%= product.id %>"
                                         data-name="<%= product.name %>" data-price="<%= product.price %>"
-                                        data-image="https://images.unsplash.com/photo-1715939885389-88c4cb93ad2c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                        data-image="<%= product.image %>">
                                         Add to Cart
                                     </button>
                                 </div>
@@ -219,7 +219,7 @@
                     <div id="cartItem">Your cart is empty</div>
                     <div class="foot">
                         <h3>Total</h3>
-                        <h2 id="total">$ 0.00</h2>
+                        <h2 id="total">PKR 0.00</h2>
                         <button type="button" class="btn btn-outline-success" id="placeOrderBtn" <% if (userId) { %>
                             <% } else { %> disabled <% } %> onclick="placeOrder('<%= userId %>')" >
                                         Place Order
@@ -291,14 +291,14 @@
                         <img class='rowimg' src='${image}'>
                     </div>
                     <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
-                    <h2 style='font-size: 15px;'>$ ${(price * quantity).toFixed(
+                    <h2 style='font-size: 15px;'>PKR ${(price * quantity).toFixed(
                         2
                     )}</h2>
                     <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
                 </div>`;
                 });
                 document.getElementById("count").textContent = cart.length;
-                document.getElementById("total").textContent = `$ ${total.toFixed(2)}`;
+                document.getElementById("total").textContent = `PKR ${total.toFixed(2)}`;
                 updatePlaceOrderButton();
             }
 

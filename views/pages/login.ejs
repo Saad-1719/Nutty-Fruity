@@ -13,9 +13,11 @@
 				border: 2px solid rgb(0, 0, 0);
 				padding: 31px;
 				border-radius: 5%;
-
 			}
+			.login-form{
 
+				min-height: 85vh;
+			}
 			.btn-primary {
 				background-color: #76a72e;
 				border-color: #76a72e;
@@ -40,8 +42,10 @@
 				transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 			}
 		</style>
+		<section class="login-form">
 
-		<div class="login-container">
+			
+			<div class="login-container">
 			<h2 class="text-center mb-4">Login</h2>
 			<div id="alert" class="alert" role="alert"></div>
 			<!-- Enter Your credentials -->
@@ -50,7 +54,7 @@
 				<div class="mb-3">
 					<label for="email" class="form-label">Email address</label>
 					<input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
-						required />
+					required />
 				</div>
 				<div class="mb-3">
 					<label for="password" class="form-label">Password</label>
@@ -66,6 +70,7 @@
 				Don't have an account? <a href="/signup">Sign Up</a>
 			</p>
 		</div>
+	</section>
 
 
 		<% if(successMessage || errorMessage) { %>
