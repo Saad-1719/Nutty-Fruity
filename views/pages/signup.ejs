@@ -1,113 +1,173 @@
-<%- include('../partials/head') %> 
-<% if (!userId) { %>
-    <%- include('../partials/headerMain') %>
-    
-    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
+<%- include('../partials/head') %>
+    <% if (!userId) { %>
+        <%- include('../partials/headerMain') %>
 
-    <style>
-        body {
-            background: linear-gradient(to bottom, #d2b48c, #ceffc7);
-            font-family: Arial, sans-serif;
-        }
-        .signup-container {
-            max-width: 473px;
-				margin: 100px auto;
-				border: 2px solid rgb(0, 0, 0);
-				padding: 31px;
-				border-radius: 5%;
-        }
-        .btn-primary {
-				background-color: #76a72e;
-				border-color: #76a72e;
-				padding: 10px 20px;
-				font-size: 18px;
-				border-radius: 5px;
+            <% } else { %> <%- include('../partials/headerSub') %>
+                    <% } %>
 
-				&:active {
-					background-color: #5c7f2c;
-					border-color: #5c7f2c;
-					/* box-shadow: pink; */
-					/* Remove default shadow */
-				}
+                        <style>
+                            body {
+                                background: linear-gradient(to bottom, #d2b48c, #ceffc7);
+                                font-family: Arial, sans-serif;
+                            }
 
-				&:hover {
-					background-color: #5c7f2c;
-					border-color: #5c7f2c;
-				}
+                            .signup-container {
+                                max-width: 473px;
+                                margin: 100px auto;
+                                border: 2px solid rgb(0, 0, 0);
+                                padding: 31px;
+                                border-radius: 5%;
+                            }
 
-				&:focus {
-					outline: none;
-					/* Remove focus outline */
-					background-color: #5c7f2c;
-					border: none;
-					box-shadow: none;
-					/* Reset background color */
-				}
-			}
-    </style>
+                            .btn-primary {
+                                background-color: #76a72e;
+                                border-color: #76a72e;
+                                padding: 10px 20px;
+                                font-size: 18px;
+                                border-radius: 5px;
+
+                                &:active {
+                                    background-color: #5c7f2c;
+                                    border-color: #5c7f2c;
+
+                                }
+
+                                &:hover {
+                                    background-color: #5c7f2c;
+                                    border-color: #5c7f2c;
+                                }
+
+                                &:focus {
+                                    outline: none;
+                                    background-color: #5c7f2c;
+                                    border: none;
+                                    box-shadow: none;
+                                }
+                            }
+                        </style>
 
 
-<div class="signup-container">
-    <h2 class="text-center mb-4">Sign Up</h2>
-    <form id="signupForm">
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" required>
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
-            <div id="emailHelp" class="form-text"></div>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" required>
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-        </div>
-        <p class="text-center mt-3">
-            Have have an account? <a href="/login">Login</a>
-        </p>
-    </form>
-</div>
+                        <div class="signup-container">
+                            <h2 class="text-center mb-4">Sign Up</h2>
+                            <form id="signupForm">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                                        required>
+                                    <div id="emailHelp" class="form-text"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Retype Password</label>
+                                    <input type="password" class="form-control" id="retypepassword" required>
+                                </div>
 
-<script>
-    document.getElementById('signupForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="fname" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lname" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Shipping Address</label>
+                                    <input type="text" class="form-control" id="shippingaddress" required>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                                </div>
+                                <p class="text-center mt-3">
+                                    Have have an account? <a href="/login">Login</a>
+                                </p>
+                            </form>
+                        </div>
 
-        // Validate name
-        if (name === '') {
-            alert('Please enter your name.');
-            return;
-        }
+                        <script>
+                            document.getElementById('signupForm').addEventListener('submit', async function (event) {
+                                event.preventDefault();
+                                const firstname = document.getElementById('fname').value.trim();
+                                const lastname = document.getElementById('lname').value.trim();
+                                const email = document.getElementById('email').value.trim();
+                                const password = document.getElementById('password').value;
+                                const shippingaddress = document.getElementById('shippingaddress').value;
+                                const retypepassword = document.getElementById('retypepassword').value;
 
-        // Validate email
-        if (!isValidEmail(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
+                                // Validate name
+                                if (firstname === '')
+                                {
+                                    alert('Please enter your name.');
+                                    return;
+                                }
+                                if (lastname === '')
+                                {
+                                    alert('Please enter your name.');
+                                    return;
+                                }
+                                if (shippingaddress === '')
+                                {
+                                    alert('Please enter your shipping address.');
+                                    return;
+                                }
 
-        // Validate password
-        if (password.length < 6) {
-            alert('Password must be at least 6 characters long.');
-            return;
-        }
+                                // Validate email
+                                if (!isValidEmail(email))
+                                {
+                                    alert('Please enter a valid email address.');
+                                    return;
+                                }
 
-        // If all validations pass, you can submit the form or send the data to the server
-        alert('Sign up successful!');
-        // Here you can redirect the user to the main page or perform any other action
-    });
+                                // Validate password
+                                if (password.length < 6)
+                                {
+                                    alert('Password must be at least 6 characters long.');
+                                    return;
+                                }
+                                if (password !== retypepassword)
+                                {
+                                    alert('Password mismatched.');
+                                    return;
+                                }
+                                try
+                                {
+                                    const response = await fetch('/signup', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ email, password, retypepassword, fname: firstname, lname: lastname, shippingaddress })
+                                    });
 
-    function isValidEmail(email) {
-        // This is a basic email validation function, you can enhance it as needed
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-</script>
+                                    const result = await response.json();
 
-<%- include('../partials/footer') %>
+                                    if (response.ok)
+                                    {
+                                        alert('Signup successful!');
+                                        // Optionally redirect the user
+                                        window.location.href = '/';
+                                    } else
+                                    {
+                                        alert(result.error);
+                                    }
+                                } catch (error)
+                                {
+                                    console.error('Error during signup:', error);
+                                    alert('An error occurred during signup. Please try again later.');
+                                }
 
+                                // If all validations pass, you can submit the form or send the data to the server
+                                // alert('Sign up successful!');
+                                // Here you can redirect the user to the main page or perform any other action
+                            });
+
+                            function isValidEmail(email) {
+                                // This is a basic email validation function, you can enhance it as needed
+                                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                return emailRegex.test(email);
+                            }
+                        </script>
+
+                        <%- include('../partials/footer') %>
