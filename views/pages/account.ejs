@@ -52,157 +52,67 @@
                 padding: 20px;
             }
 
-            .order-innfo-list {
-                /* display: flex;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
-    align-items: center; */
-                display: grid;
-                /* flex-direction: column; */
-                gap: 20px;
-                grid-template-columns: 300px 300px 300px;
-                justify-content: center;
-            }
-
-            .order-row {
-                /* display: flex;
-    flex-direction: column;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 15px;
-    width: 50vw;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-                display: grid;
-                flex-direction: column;
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                padding: 15px;
-                /* width: 50vw; */
-                align-items: center;
-                justify-content: space-evenly;
-                background-color: #f9f9f9;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .order-details {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .order-details h5 {
-                font-size: 1.2em;
-                margin-bottom: 10px;
-            }
-
-            .order-details p {
-                font-size: 1em;
-                margin-bottom: 4px;
-            }
-
-            .order-details ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            .order-details ul li {
-                font-size: 0.9em;
-                margin-bottom: 5px;
-            }
-
-            #no_order {
-                text-align: center;
-            }
-
-            .container {
+            .logout_btn_container {
                 display: flex;
                 align-items: center;
                 /* margin: 48px; */
                 padding-top: 50px;
                 justify-content: center;
             }
+
+            .main_section {
+                min-height: 80vh;
+            }
+
+            .user-info {
+                border: 2px solid red;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-detail {
+                padding: 20px;
+            }
+
+            .order-info-class {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         </style>
-        <div class="heading-container">
-            <h2 class="text-center mb-4">Account's Info</h2>
-        </div>
-        <div class="order-info-class">
-            <div class="order-innfo-list">
-                <% if (orders && orders.length) { %>
-                    <% orders.forEach(order=> { %>
-                        <div class="order-row">
-                            <div class="order-details">
-                                <b>Order Date: <%= order.order_date %></b>
-                                <p><b>Total:</b>
-                                    <%= order.total %>
-                                </p>
-                                <ul>
-                                    <% order.products.forEach(product=> { %>
-                                        <li><b>
-                                                <%= product.product_name %>:
-                                            </b>
-                                            <%= product.quantity %>
-                                        </li>
-                                        <% }) %>
-                                </ul>
-                            </div>
-                        </div>
-                        <% }) %>
-                            <% } else { %>
-                                <p id="no_order">
-                                <h3>No orders found.</h3>
-                                </p>
-                                <% } %>
+        <section class="main_section">
+
+            <div class="heading-container">
+                <h2 class="text-center mb-4">Account's Info</h2>
             </div>
-            <div class="container">
-                <form action="/login" method="GET">
+
+            <div class="order-info-class">
+
+                <div class="user-info">
+                    <h2>User Information</h2>
+                    <div class="user-detail">
+                        <b>Email:</b>
+                        <%= info.email %>
+                    </div>
+                    <div class="user-detail">
+                        <b>Shipping Address:</b>
+                        <%= info.shipping_address %>
+                    </div>
+                </div>
+
+            </div>
+            <div class="logout_btn_container">
+                <form action="/" method="GET">
                     <button type="submit" class="btn btn-danger">Logout</button>
                 </form>
             </div>
-        </div>
-
-        <div class="heading-container">
-            <h2 class="text-center mb-4">Orders</h2>
-        </div>
-        <div class="order-info-class">
-            <div class="order-innfo-list">
-                <% if (orders && orders.length) { %>
-                    <% orders.forEach(order=> { %>
-                        <div class="order-row">
-                            <div class="order-details">
-                                <b>Order Date: <%= order.order_date %></b>
-                                <p><b>Total:</b>
-                                    <%= order.total %>
-                                </p>
-                                <ul>
-                                    <% order.products.forEach(product=> { %>
-                                        <li><b>
-                                                <%= product.product_name %>:
-                                            </b>
-                                            <%= product.quantity %>
-                                        </li>
-                                        <% }) %>
-                                </ul>
-                            </div>
-                        </div>
-                        <% }) %>
-                            <% } else { %>
-                                <p id="no_order">
-                                <h3>No orders found.</h3>
-                                </p>
-                                <% } %>
-            </div>
-        </div>
 
 
-        <!-- <div>
-    <%- JSON.stringify(orders) %>
-</div> -->
+        </section>
+
+
 
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
