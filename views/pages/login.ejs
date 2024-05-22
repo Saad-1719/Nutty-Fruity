@@ -1,4 +1,9 @@
-<%- include('../partials/head', {title: 'Page Title' }) %> <%- include('../partials/headerSub') %>
+<%- include('../partials/head') %> 
+<% if (!userId) { %>
+    <%- include('../partials/headerMain') %>
+    
+    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
+
 		<style>
 			body {
 				/* background-color: #f8f9fa; */

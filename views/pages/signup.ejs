@@ -1,5 +1,9 @@
-<%- include('../partials/head', {title: 'Page Title'}) %>
-<%- include('../partials/headerSub') %>
+<%- include('../partials/head') %> 
+<% if (!userId) { %>
+    <%- include('../partials/headerMain') %>
+    
+    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
+
     <style>
         body {
             background: linear-gradient(to bottom, #d2b48c, #ceffc7);
