@@ -1,13 +1,13 @@
 const express = require("express");
-// const { title } = require("process");
+const { title } = require("process");
 const app = express();
 const port = 3030;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const mysqlprom = require("mysql2/promise");
 const mysql = require("mysql2");
-// const { error } = require("console");
-// const { localsName } = require("ejs");
+const { error } = require("console");
+const { localsName } = require("ejs");
 
 //setting view engine
 app.set("view engine", "ejs");
@@ -301,7 +301,7 @@ app.get("/orderDetails", (req, res) => {
 				}
 
 				return acc;
-			});
+			}, {});
 
 			var ordersArray = Object.values(ordersMap);
 			res.render("pages/orderDetails", {
@@ -312,8 +312,6 @@ app.get("/orderDetails", (req, res) => {
 		}
 	);
 });
-
-
 
 app.get("/account", (req, res) => {
 	const userId = req.session.userId;

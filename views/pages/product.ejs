@@ -1,9 +1,4 @@
-<%- include('../partials/head') %> 
-<% if (!userId) { %>
-    <%- include('../partials/headerMain') %>
-    
-    <% } else { %> <%- include('../partials/headerSub') %> <% } %>
-
+<%- include('../partials/head', {title: 'Page Title' }) %> <%- include('../partials/headerSub') %>
         <style>
             body {
                 font-family: Arial, sans-serif;
