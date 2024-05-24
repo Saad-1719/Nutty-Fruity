@@ -72,6 +72,7 @@ app.get("/login", (req, res) =>
 		errorMessage: errorMessage || null,
 		successMessage: successMessage || null,
 		userId: req.session.userId,
+		userRole: req.session.userRole,
 	});
 });
 
@@ -97,13 +98,15 @@ app.post("/login", (req, res) =>
 				const userId = user.id;
 				const userRole = user.user_type;
 				req.session.userId = userId;
+				req.session.userRole = userRole
 				req.session.successMessage = "Login Successful";
 				if (userRole === "child_user") {
 					res.redirect("/product");
 					// res.redirect("/product");
 				} else {
 					// Handle other roles or default redirection if needed
-					res.redirect("/");
+					res.redirect("/admin");
+
 				}
 			} else {
 				console.log("error login ");
@@ -124,6 +127,15 @@ app.get("/signup", (req, res) =>
 		errorMessage: null,
 	});
 });
+
+function isUser(req, res, next)
+{
+	if (req.session.userRole === 'child_user') {
+		next();
+	} else {
+		res.status(403).send('Access denied');
+	}
+}
 
 app.post("/signup", async (req, res) =>
 {
@@ -260,7 +272,7 @@ app.post("/product", (req, res) =>
 	);
 });
 
-app.get("/orderDetails", (req, res) =>
+app.get("/orderDetails", isUser, (req, res) =>
 {
 	const userId = req.session.userId;
 
@@ -320,7 +332,7 @@ app.get("/orderDetails", (req, res) =>
 	);
 });
 
-app.get("/account", (req, res) =>
+app.get("/account", isUser, (req, res) =>
 {
 	const userId = req.session.userId;
 
@@ -360,7 +372,17 @@ app.listen(port, () =>
 	console.log(`App listening at port ${port}`);
 });
 
-app.get("/admin", (req, res) =>
+
+function isAdmin(req, res, next)
+{
+	if (req.session.userRole === 'super_admin') {
+		next();
+	} else {
+		res.status(403).send('Access denied');
+	}
+}
+
+app.get("/admin", isAdmin, (req, res) =>
 {
 
 	pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
@@ -370,105 +392,187 @@ app.get("/admin", (req, res) =>
 			res.status(500).send("internal server error");
 			return;
 		}
-		console.log(results);
-		res.render("pages/admin", {
-			title: "Admin",
-			userId: req.session.userId,
-			date: null,
-			totalSales: 0,
-			averageSales: 0,
-			placedOrders: 0,
-			per_day_item: 0,
-			stocks: results,
-			per_day_item:null,
-		});
-	})
-});
-
-app.post("/admin", (req, res) =>
-{
-	const date_sub = req.body.date_sub;
-	console.log(`the date is: ${date_sub}`);
-	pool.query(
-		"select sum(total) as total_sales from orders where date(order_date) = ?",
-		[date_sub],
-		(error, sum_result, fields) =>
+		pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", (error, top_items, fields) =>
 		{
 			if (error) {
-				console.error("Error executing query:", error);
+				console.error("error displaying information");
 				res.status(500).send("internal server error");
 				return;
 			}
-			// const totalSalesPerDay = sum_result[0].total_sales;
-			let totalSalesPerDay;
+			console.log(results);
+			res.render("pages/admin", {
+				title: "Admin",
+				userId: req.session.userId,
+				userRole: req.session.userRole,
+				date: null,
+				totalSales: 0,
+				averageSales: 0,
+				placedOrders: 0,
+				per_day_item: 0,
+				stocks: results,
+				per_day_item: null,
+				top_seller: top_items
+			});
+		})
+	})
+});
 
-			if (sum_result[0].total_sales == null) {
-				totalSalesPerDay = 0;
+// app.post("/admin", (req, res) =>
+// {
+// 	const date_sub = req.body.date_sub;
+// 	console.log(`the date is: ${date_sub}`);
+// 	pool.query(
+// 		"select sum(total) as total_sales from orders where date(order_date) = ?",
+// 		[date_sub],
+// 		(error, sum_result, fields) =>
+// 		{
+// 			if (error) {
+// 				console.error("Error executing query:", error);
+// 				res.status(500).send("internal server error");
+// 				return;
+// 			}
+// 			// const totalSalesPerDay = sum_result[0].total_sales;
+// 			let totalSalesPerDay;
+
+// 			if (sum_result[0].total_sales == null) {
+// 				totalSalesPerDay = 0;
+// 			}
+// 			else {
+// 				totalSalesPerDay = sum_result[0].total_sales;
+// 			}
+
+// 			console.log(`the total sales are : ${totalSalesPerDay}`);
+
+// 			pool.query("select avg(total) as average_sales from orders where date(order_date)= ?", [date_sub], (error, avg_result, fields) =>
+// 			{
+// 				if (error) {
+// 					console.error("Error executing query:", error);
+// 					res.status(500).send("internal server error")
+// 					return
+// 				}
+// 				// const avgSales = avg_result[0].average_sales
+// 				let avgSales;
+// 				if (totalSalesPerDay == 0) {
+// 					avgSales = 0;
+// 				}
+// 				else {
+// 					avgSales = avg_result[0].average_sales;
+// 				}
+// 				console.log(`the average sale is : ${avgSales}`);
+// 				pool.query("select count(order_id) as orders_palced from orders where date(order_date)=?", [date_sub], (error, order_result, fields) =>
+// 				{
+// 					if (error) {
+// 						console.error("Error executing query:", error);
+// 						res.status(500).send("internal server error")
+// 						return
+// 					}
+// 					const no_of_orders = order_result[0].orders_palced;
+// 					console.log(`the palced orders are : ${no_of_orders}`);
+
+// 					pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
+// 					{
+// 						if (error) {
+// 							console.error("error displaying information");
+// 							res.status(500).send("internal server error");
+// 							return;
+// 						}
+// 						pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id where date(ord.order_date)= ? GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", [date_sub], (error, date_result, fields) =>
+// 						{
+// 							if (error) {
+// 								console.error("error displaying information");
+// 								res.status(500).send("internal server error");
+// 								return;
+// 							}
+
+// 							pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", (error, top_items, fields) =>
+// 							{
+// 								if (error) {
+// 									console.error("error displaying information");
+// 									res.status(500).send("internal server error");
+// 									return;
+// 								}
+// 								// console.log(results);
+// 								console.log(`per day item results are: ${date_result}`);
+// 								res.render("pages/admin", {
+// 									title: "Admin",
+// 									userId: req.session.userId,
+// 									userRole: req.session.userRole,
+// 									date: date_sub,
+// 									totalSales: totalSalesPerDay,
+// 									averageSales: avgSales,
+// 									placedOrders: no_of_orders,
+// 									stocks: results,
+// 									per_day_item: date_result,
+// 									top_seller: top_items
+// 								});
+// 							})
+
+// 						})
+// 					})
+// 				})
+// 			})
+
+
+// 		}
+// 	);
+// });
+
+app.post("/admin",isAdmin, (req, res) =>
+{
+	const date_sub = req.body.date_sub;
+	console.log(`the date is: ${date_sub}`);
+
+	pool.query("SELECT SUM(total) AS total_sales, AVG(total) AS average_sales, COUNT(order_id) AS orders_placed FROM orders WHERE DATE(order_date) = ?;", [date_sub], (error, result, fields) =>
+	{
+		if (error) {
+			console.error("Error executing query:", error);
+			res.status(500).send("Internal server error");
+			return;
+		}
+
+		const { total_sales, average_sales, orders_placed } = result[0];
+		const totalSalesPerDay = total_sales || 0;
+		const avgSales = totalSalesPerDay === 0 ? 0 : average_sales || 0;
+		const no_of_orders = orders_placed || 0;
+
+		pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id where date(ord.order_date)= ? GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", [date_sub], (error, date_result, fields) =>
+		{
+			if (error) {
+				console.error("Error executing query:", error);
+				res.status(500).send("Internal server error");
+				return;
 			}
-			else {
-				totalSalesPerDay = sum_result[0].total_sales;
-			}
 
-			console.log(`the total sales are : ${totalSalesPerDay}`);
-
-			pool.query("select avg(total) as average_sales from orders where date(order_date)= ?", [date_sub], (error, avg_result, fields) =>
+			pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", (error, top_items, fields) =>
 			{
 				if (error) {
 					console.error("Error executing query:", error);
-					res.status(500).send("internal server error")
-					return
+					res.status(500).send("Internal server error");
+					return;
 				}
-				// const avgSales = avg_result[0].average_sales
-				let avgSales;
-				if (totalSalesPerDay == 0) {
-					avgSales = 0;
-				}
-				else {
-					avgSales = avg_result[0].average_sales;
-				}
-				console.log(`the average sale is : ${avgSales}`);
-				pool.query("select count(order_id) as orders_palced from orders where date(order_date)=?", [date_sub], (error, order_result, fields) =>
+
+				pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
 				{
 					if (error) {
-						console.error("Error executing query:", error);
-						res.status(500).send("internal server error")
-						return
+						console.error("error displaying information");
+						res.status(500).send("internal server error");
+						return;
 					}
-					const no_of_orders = order_result[0].orders_palced;
-					console.log(`the palced orders are : ${no_of_orders}`);
-
-					pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
-					{
-						if (error) {
-							console.error("error displaying information");
-							res.status(500).send("internal server error");
-							return;
-						}
-						pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id where date(ord.order_date)= ? GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", [date_sub], (error, date_result, fields) =>
-						{
-							if (error) {
-								console.error("error displaying information");
-								res.status(500).send("internal server error");
-								return;
-							}
-							// console.log(results);
-							console.log(`per day item results are: ${date_result}`);
-							res.render("pages/admin", {
-								title: "Admin",
-								userId: req.session.userId,
-								date: date_sub,
-								totalSales: totalSalesPerDay,
-								averageSales: avgSales,
-								placedOrders: no_of_orders,
-								stocks: results,
-								per_day_item:date_result,
-							});
-						})
-					})
+				
+					res.render("pages/admin", {
+						title: "Admin",
+						userId: req.session.userId,
+						userRole: req.session.userRole,
+						date: date_sub,
+						totalSales: totalSalesPerDay,
+						averageSales: avgSales,
+						placedOrders: no_of_orders,
+						stocks: results,
+						per_day_item: date_result,
+						top_seller: top_items
+					});
 				})
-			})
-
-
-		}
-	);
+			});
+		});
+	});
 });

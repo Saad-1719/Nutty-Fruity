@@ -1,4 +1,10 @@
-<%- include('../partials/head', { title: 'Your Page Title' }) %> <%- include('../partials/headerSub') %>
+<%- include('../partials/head') %>
+    <% if (!userId) { %>
+        <%- include('../partials/headerMain') %>
+
+            <% } else { %> <%- include('../partials/headerSub') %>
+                    <% } %>	
+						
 		<link rel="stylesheet" href="/css/style.css" />
 		<style>
 			.heading-container {
