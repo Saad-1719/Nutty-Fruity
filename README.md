@@ -80,9 +80,7 @@ VALUES
 - CREATE TABLE order_details (
     order_id INT,
     product_name VARCHAR(255),
-    product_id int,
     quantity INT,
     price_per_piece DECIMAL(10,2),
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
 );
