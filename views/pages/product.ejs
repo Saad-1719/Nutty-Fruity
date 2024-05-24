@@ -31,9 +31,7 @@
 
             .product-container {
                 display: flex;
-                /* margin: 50px; */
                 margin: 0px 50px 50px 50px;
-                /* flex-direction: row-reverse; */
             }
 
             .product-list {
@@ -75,7 +73,7 @@
             }
 
             .head {
-                background-color: goldenrod;
+                background-color: #76a72e;
                 border-radius: 3px;
                 height: 56px;
                 padding: 10px;
@@ -114,7 +112,6 @@
             .rowimg {
                 max-width: 43px;
                 max-height: 43px;
-                /* border-radius: 50%; */
             }
 
             .fa-trash:hover {
@@ -189,8 +186,8 @@
                             <% } else { %> disabled <% } %> onclick="placeOrder('<%= userId %>')"
                                         > Place Order
                         </button>
-                        <h2>User: <%= userId %>
-                        </h2>
+                            <!-- <h2>User: <%= userId %>
+                            </h2> -->
                     </div>
                 </div>
             </div>
@@ -319,13 +316,12 @@
                 );
                 orderModal.show();
 
-                // Close the modal after a short delay
                 setTimeout(function () {
                     orderModal.hide();
                 }, 1000);
 
-                // Redirect to the main page after another short delay
-                setTimeout(function () {
+                setTimeout(function () 
+                {
                     window.location.href = "/";
                 }, 1000);
             }
@@ -333,22 +329,18 @@
             function placeOrder(userId) {
                 if (!userId)
                 {
-                    // User is not logged in, display a message or redirect to the login page
                     alert("Please login first to place an order.");
-                    window.location.href = "/login"; // Adjust the URL as needed
-
-                    // return
+                    window.location.href = "/login"; 
                 } else
                 {
                     $.ajax({
                         url: "/product",
                         type: "POST",
                         data: {
-                            products: cart, // Assuming cart contains the list of products
-                            total: total, // Assuming total contains the total price
+                            products: cart, 
+                            total: total, 
                         },
                         success: function (response) {
-                            // Empty the cart after successful order placement
                             cart = [];
                             displaycart();
                             displayOrderConfirmationModal();

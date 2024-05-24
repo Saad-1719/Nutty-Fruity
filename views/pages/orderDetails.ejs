@@ -14,7 +14,6 @@
                                 margin-top: 30px;
                             }
 
-
                             .order-innfo-list {
                                 flex: 1;
                             }
@@ -110,14 +109,14 @@
                                                 <div class="order-details">
                                                     <b>Order Date: <%= order.order_date %></b>
                                                     <p><b>Total:</b>
-                                                        <%= order.total %>
+                                                        <%= order.total %> PKR
                                                     </p>
                                                     <ul>
                                                         <% order.products.forEach(product=> { %>
                                                             <li><b>
                                                                     <%= product.product_name %>:
                                                                 </b>
-                                                                <%= product.quantity %>
+                                                                <%= product.quantity %> Packing(s)
                                                             </li>
                                                             <% }) %>
                                                     </ul>
