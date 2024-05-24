@@ -39,13 +39,13 @@ lname varchar(255) null,
 
 - Sample data for users
 
-- INSERT INTO users (email, user_password,fname, lname, shipping_address) VALUES
-('saleem@gmail.com', 'sal12345', 'saleem', 'nauman', 'F8/4 islamabad'),
-('kareem@gmail.com', 'kar12345', , 'kareem, 'rehman, 'G10/4 islamabad');
+- INSERT INTO users (email, user_password,fname, lname, shipping_address)
+ VALUES ('saleem@gmail.com', 'sal12345', 'Saleem', 'Nauman', 'F8/4 islamabad'), 
+ ('kareem@gmail.com', 'kar12345', 'Kareem','Rehman', 'G10/4 islamabad');
 
 - Sample data for admin
-- INSERT INTO users (email, user_password,fname, lname, user_type) VALUES
-('saad@gmail.com', 'saad@admin', , 'kareem, 'rehman, 'super_admin'  );
+-  INSERT INTO users (email, user_password,fname, lname, user_type) VALUES
+('saad@gmail.com', 'saad@admin', 'Saad', 'Jamil', 'super_admin'  );
 
 - Table for products
 - CREATE TABLE Products (
