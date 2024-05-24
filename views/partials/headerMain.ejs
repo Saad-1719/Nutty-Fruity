@@ -1,19 +1,25 @@
 <style>
-    li:hover{
+    li:hover {
         /* box-shadow: inset; */
         background-color: rgb(198, 187, 187);
         border-radius: 2px solid black;
         transition: all;
         color: rgb(255, 255, 255);
     }
+
     @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+        from {
+            opacity: 1;
         }
 
-        .fade-out {
-            animation: fadeOut 1s forwards;
+        to {
+            opacity: 0;
         }
+    }
+
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
 </style>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
@@ -30,15 +36,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/product">Products</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li> -->
+
                 <li class="nav-item">
                     <a class="nav-link" href="/login">
                         Login
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M20.944 18.432a2.577 2.577 0 0 1-2.729 2.5c-2.153.012-4.307 0-6.46 0a.5.5 0 0 1 0-1c2.2 0 4.4.032 6.6 0c1.107-.016 1.589-.848 1.589-1.838V5.63a1.545 1.545 0 0 0-.969-1.471a3 3 0 0 0-1.061-.095h-6.159a.5.5 0 0 1 0-1c2.225 0 4.465-.085 6.688 0a2.566 2.566 0 0 1 2.5 2.67Z"/><path fill="currentColor" d="M15.794 12.354a.46.46 0 0 0 .138-.312l.006-.042l-.006-.041a.46.46 0 0 0-.138-.313l-3.669-3.668a.5.5 0 0 0-.707.707l2.816 2.815H3.492a.5.5 0 0 0 0 1h10.742l-2.816 2.815a.5.5 0 0 0 .707.707Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M20.944 18.432a2.577 2.577 0 0 1-2.729 2.5c-2.153.012-4.307 0-6.46 0a.5.5 0 0 1 0-1c2.2 0 4.4.032 6.6 0c1.107-.016 1.589-.848 1.589-1.838V5.63a1.545 1.545 0 0 0-.969-1.471a3 3 0 0 0-1.061-.095h-6.159a.5.5 0 0 1 0-1c2.225 0 4.465-.085 6.688 0a2.566 2.566 0 0 1 2.5 2.67Z" />
+                            <path fill="currentColor"
+                                d="M15.794 12.354a.46.46 0 0 0 .138-.312l.006-.042l-.006-.041a.46.46 0 0 0-.138-.313l-3.669-3.668a.5.5 0 0 0-.707.707l2.816 2.815H3.492a.5.5 0 0 0 0 1h10.742l-2.816 2.815a.5.5 0 0 0 .707.707Z" />
+                        </svg>
 
-                        <!-- <button type="button" class="btn btn-outline-light me-2">Login</button> -->
                     </a>
                 </li>
             </ul>
@@ -47,24 +55,13 @@
 </nav>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll(".nav-link");
 
         navLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPath) {
-                link.parentElement.style.display = "none";
-            }
-        });
-    });
-</script>
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll(".nav-link");
-
-        navLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPath) {
+            if (link.getAttribute("href") === currentPath)
+            {
                 link.parentElement.classList.add("fade-out");
                 link.parentElement.addEventListener("animationend", () => {
                     link.parentElement.style.display = "none";
@@ -72,4 +69,4 @@
             }
         });
     });
-</script> -->
+</script>

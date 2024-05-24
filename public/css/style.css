@@ -6,12 +6,21 @@
 }
 body {
     color: rgb(0, 0, 0);
+    /* color: rgb(255, 255, 255); */
     /* background-image: linear-gradient(to right, #243949 0%, #517fa4 100%); */
     /* background-image: linear-gradient(-225deg, #FFE29F 0%, #FFA99F 48%, #FF719A 100%); */
-    background: linear-gradient(to bottom, #d2b48c, #ceffc7);
+    /* background: linear-gradient(to bottom, #d2b48c, #ceffc7); */
     /* background: radial-gradient(circle at center, #ff0000, #ceffc7); */
-
+    /* background-image: radial-gradient( circle 759px at -6.7% 50%,  rgba(80,131,73,1) 0%, rgba(140,209,131,1) 26.2%, rgba(178,231,170,1) 50.6%, rgba(144,213,135,1) 74.1%, rgba(75,118,69,1) 100.3% ); */
     /* background-color: rgb(255, 255, 255); */
+    /* background-image: linear-gradient( 109.6deg,  rgba(15,2,2,1) 11.2%, rgba(36,163,190,1) 91.1% ); */
+    /* background-image: linear-gradient( 177.7deg,  rgba(79,104,112,1) 4.1%, rgba(150,198,214,1) 93.9% ); */
+    
+    
+    /* background-image: radial-gradient( circle 1292px at -13.6% 51.7%,  rgba(0,56,68,1) 0%, rgba(163,217,185,1) 51.5%, rgb(93, 151, 138) 88.6% ); */
+    /* background: linear-gradient(to bottom, #1f4037, #99f2c8);  */
+    /* background: linear-gradient(to bottom, #34e89e, #0f3443);  */
+    background-image: radial-gradient(circle, #3fdf3d, #37bc2f, #2e9b22, #247b15, #195c0a);
     overflow-y: scroll;
 }
 .btn-primary {
@@ -22,20 +31,21 @@ body {
     border-radius: 5px;
 
     &:active {
-        background-color: #5c7f2c;
+        background-color: #000000;
         border-color: #5c7f2c;
         box-shadow: none;
         /* Remove default shadow */
     }
 
     &:hover {
-        background-color: #5c7f2c;
+        /* colo */
+        background-color: #000000;
         border-color: #5c7f2c;
     }
 
     &:focus {
         outline: none;
-        background-color: #5c7f2c;
+        background-color: #000000;
         border: none;
         box-shadow: none;
     }
