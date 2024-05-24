@@ -1,28 +1,26 @@
 const express = require("express");
-const { title } = require("process");
+// const { title } = require("process");
 const app = express();
 const port = 3030;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const mysqlprom = require("mysql2/promise");
 const mysql = require("mysql2");
-const { error } = require("console");
-const { localsName } = require("ejs");
+// const { error } = require("console");
+// const { localsName } = require("ejs");
 
 //setting view engine
 app.set("view engine", "ejs");
-app.use(express.static('public'));
-
+app.use(express.static("public"));
 
 app.use(
 	session({
 		secret: "your_secret_key",
 		resave: false,
-        saveUninitialized: true,
-        cookie: { maxAge: 300000 }
+		saveUninitialized: true,
+		cookie: { maxAge: 300000 },
 	})
 );
-
 
 // creating pool
 const prompool = mysqlprom.createPool({
@@ -31,7 +29,6 @@ const prompool = mysqlprom.createPool({
 	password: "root",
 	database: "dbms_project",
 });
-
 
 const pool = mysql.createPool({
 	host: "localhost",
@@ -42,9 +39,9 @@ const pool = mysql.createPool({
 	queueLimit: 0,
 });
 
-
 //check for connection
-pool.getConnection((err, connection) => {
+pool.getConnection((err, connection) =>
+{
 	if (err) {
 		console.error("Error connecting to database:", err);
 		return;
@@ -56,15 +53,16 @@ pool.getConnection((err, connection) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-app.get("/", (req, res) => {
+app.get("/", (req, res) =>
+{
 	res.render("pages/index", {
 		title: "Home",
 		userId: req.session.userId,
 	});
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", (req, res) =>
+{
 	const successMessage = req.session.successMessage;
 	const errorMessage = req.session.errorMessage;
 	req.session.successMessage = null;
@@ -78,7 +76,8 @@ app.get("/login", (req, res) => {
 });
 
 // Login route
-app.post("/login", (req, res) => {
+app.post("/login", (req, res) =>
+{
 	const email = req.body.email;
 	const password = req.body.password;
 	console.log(email);
@@ -86,7 +85,8 @@ app.post("/login", (req, res) => {
 	pool.query(
 		"SELECT * FROM users WHERE email = ? AND user_password = ?",
 		[email, password],
-		(error, results, fields) => {
+		(error, results, fields) =>
+		{
 			if (error) {
 				console.error("Error executing query:", error);
 				res.status(500).send("Internal Server Error");
@@ -97,14 +97,14 @@ app.post("/login", (req, res) => {
 				const userId = user.id;
 				const userRole = user.user_type;
 				req.session.userId = userId;
-                req.session.successMessage = "Login Successful";
-                if (userRole === 'child_user') {
-                    res.redirect("/product");
-                    // res.redirect("/product");
-                } else {
-                    // Handle other roles or default redirection if needed
-                    res.redirect("/");
-                }
+				req.session.successMessage = "Login Successful";
+				if (userRole === "child_user") {
+					res.redirect("/product");
+					// res.redirect("/product");
+				} else {
+					// Handle other roles or default redirection if needed
+					res.redirect("/");
+				}
 			} else {
 				console.log("error login ");
 				req.session.errorMessage = "Invalid email or password.";
@@ -114,9 +114,9 @@ app.post("/login", (req, res) => {
 	);
 });
 
-
 //rending signup page
-app.get("/signup", (req, res) => {
+app.get("/signup", (req, res) =>
+{
 	res.render("pages/signup", {
 		// user,
 		title: "Signup",
@@ -125,8 +125,10 @@ app.get("/signup", (req, res) => {
 	});
 });
 
-app.post("/signup", async (req, res) => {
-	const { email, password, retypepassword, fname, lname, shippingaddress } = req.body;
+app.post("/signup", async (req, res) =>
+{
+	const { email, password, retypepassword, fname, lname, shippingaddress } =
+		req.body;
 
 	if (password !== retypepassword) {
 		return res.status(400).json({ error: "Password do not match" });
@@ -154,12 +156,13 @@ app.post("/signup", async (req, res) => {
 	}
 });
 
-
 // rendering product page
-app.get("/product", (req, res) => {
+app.get("/product", (req, res) =>
+{
 	pool.query(
 		"SELECT name, image, weight, price, category FROM products",
-		(error, results, fields) => {
+		(error, results, fields) =>
+		{
 			if (error) {
 				console.error("Error executing query:", error);
 				res.status(500).send("Internal Server Error");
@@ -179,22 +182,22 @@ app.get("/product", (req, res) => {
 	);
 });
 
-
-
-app.post("/product", (req, res) => {
+app.post("/product", (req, res) =>
+{
 	const userId = req.session.userId;
 	const { total, products } = req.body;
 	if (!req.session.userId) {
 		res.status(401).send("Unauthorized: Please login first.");
 		return;
 	}
-	const productsJSON = JSON.stringify(products);
+	// const productsJSON = JSON.stringify(products);
 	console.log("User ID:", userId);
 	console.log("Total:", total);
 	pool.query(
 		"INSERT INTO orders (user_id, total) VALUES (?, ?)",
 		[userId, total],
-		(error, results, fields) => {
+		(error, results, fields) =>
+		{
 			if (error) {
 				console.error("Error placing order:", error);
 				res.status(500).send("Internal Server Error");
@@ -208,12 +211,14 @@ app.post("/product", (req, res) => {
 			let updateCount = 0;
 			let errorOccurred = false;
 
-			products.forEach((product) => {
+			products.forEach((product) =>
+			{
 				const { name, price, quantity } = product;
 				pool.query(
 					"INSERT INTO order_details (order_id, product_name, price_single_item, quantity) VALUES (?, ?, ?, ?)",
 					[user_order_id, name, price, quantity],
-					(error, results, fields) => {
+					(error, results, fields) =>
+					{
 						if (error) {
 							console.error("Error placing insertion:", error);
 							if (!errorOccurred) {
@@ -227,7 +232,8 @@ app.post("/product", (req, res) => {
 						pool.query(
 							"UPDATE products SET remaining_quantity = remaining_quantity - ? WHERE name = ?",
 							[quantity, name],
-							(error) => {
+							(error) =>
+							{
 								if (error) {
 									console.error("Error updating product quantity:", error);
 									if (!errorOccurred) {
@@ -254,24 +260,23 @@ app.post("/product", (req, res) => {
 	);
 });
 
-
-
-
-app.get("/orderDetails", (req, res) => {
+app.get("/orderDetails", (req, res) =>
+{
 	const userId = req.session.userId;
 
 	pool.query(
 		"SELECT orders.order_id, order_details.product_name, order_details.quantity, orders.total, orders.order_date FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id WHERE orders.user_id = ?",
 		[userId],
-
-		(error, results, fields) => {
+		(error, results, fields) =>
+		{
 			if (error) {
 				console.error("Error executing query:", error);
 				res.status(500).send("Internal Server Error");
 				return;
 			}
 
-			const ordersMap = results.reduce((acc, row) => {
+			const ordersMap = results.reduce((acc, row) =>
+			{
 				if (!acc[row.order_id]) {
 					acc[row.order_id] = {
 						order_id: row.order_id,
@@ -309,19 +314,21 @@ app.get("/orderDetails", (req, res) => {
 			res.render("pages/orderDetails", {
 				title: "Account",
 				orders: ordersArray,
-				userId: req.session.userId
+				userId: req.session.userId,
 			});
 		}
 	);
 });
 
-app.get("/account", (req, res) => {
+app.get("/account", (req, res) =>
+{
 	const userId = req.session.userId;
 
 	pool.query(
 		"SELECT fname,lname,email, shipping_address FROM users WHERE id = ?",
 		[userId],
-		(error, account_info, fields) => {
+		(error, account_info, fields) =>
+		{
 			if (error) {
 				console.error("Error executing query:", error);
 				res.status(500).send("Internal Server Error");
@@ -337,9 +344,10 @@ app.get("/account", (req, res) => {
 	);
 });
 
-
-app.post("/logout", (req, res) => {
-	req.session.destroy((err) => {
+app.post("/logout", (req, res) =>
+{
+	req.session.destroy((err) =>
+	{
 		if (err) {
 			console.error("Error destroying session:", err);
 		}
@@ -347,7 +355,120 @@ app.post("/logout", (req, res) => {
 	});
 });
 
-
-app.listen(port, () => {
+app.listen(port, () =>
+{
 	console.log(`App listening at port ${port}`);
+});
+
+app.get("/admin", (req, res) =>
+{
+
+	pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
+	{
+		if (error) {
+			console.error("error displaying information");
+			res.status(500).send("internal server error");
+			return;
+		}
+		console.log(results);
+		res.render("pages/admin", {
+			title: "Admin",
+			userId: req.session.userId,
+			date: null,
+			totalSales: 0,
+			averageSales: 0,
+			placedOrders: 0,
+			per_day_item: 0,
+			stocks: results,
+			per_day_item:null,
+		});
+	})
+});
+
+app.post("/admin", (req, res) =>
+{
+	const date_sub = req.body.date_sub;
+	console.log(`the date is: ${date_sub}`);
+	pool.query(
+		"select sum(total) as total_sales from orders where date(order_date) = ?",
+		[date_sub],
+		(error, sum_result, fields) =>
+		{
+			if (error) {
+				console.error("Error executing query:", error);
+				res.status(500).send("internal server error");
+				return;
+			}
+			// const totalSalesPerDay = sum_result[0].total_sales;
+			let totalSalesPerDay;
+
+			if (sum_result[0].total_sales == null) {
+				totalSalesPerDay = 0;
+			}
+			else {
+				totalSalesPerDay = sum_result[0].total_sales;
+			}
+
+			console.log(`the total sales are : ${totalSalesPerDay}`);
+
+			pool.query("select avg(total) as average_sales from orders where date(order_date)= ?", [date_sub], (error, avg_result, fields) =>
+			{
+				if (error) {
+					console.error("Error executing query:", error);
+					res.status(500).send("internal server error")
+					return
+				}
+				// const avgSales = avg_result[0].average_sales
+				let avgSales;
+				if (totalSalesPerDay == 0) {
+					avgSales = 0;
+				}
+				else {
+					avgSales = avg_result[0].average_sales;
+				}
+				console.log(`the average sale is : ${avgSales}`);
+				pool.query("select count(order_id) as orders_palced from orders where date(order_date)=?", [date_sub], (error, order_result, fields) =>
+				{
+					if (error) {
+						console.error("Error executing query:", error);
+						res.status(500).send("internal server error")
+						return
+					}
+					const no_of_orders = order_result[0].orders_palced;
+					console.log(`the palced orders are : ${no_of_orders}`);
+
+					pool.query("select name, total_quantity,remaining_quantity from products;", (error, results, fields) =>
+					{
+						if (error) {
+							console.error("error displaying information");
+							res.status(500).send("internal server error");
+							return;
+						}
+						pool.query("SELECT p.id, p.name, SUM(o.quantity) AS quantity_sold FROM products p inner JOIN order_details o ON p.name = o.product_name inner join orders ord on o.order_id=ord.order_id where date(ord.order_date)= ? GROUP BY p.id, p.name ORDER BY quantity_sold DESC;", [date_sub], (error, date_result, fields) =>
+						{
+							if (error) {
+								console.error("error displaying information");
+								res.status(500).send("internal server error");
+								return;
+							}
+							// console.log(results);
+							console.log(`per day item results are: ${date_result}`);
+							res.render("pages/admin", {
+								title: "Admin",
+								userId: req.session.userId,
+								date: date_sub,
+								totalSales: totalSalesPerDay,
+								averageSales: avgSales,
+								placedOrders: no_of_orders,
+								stocks: results,
+								per_day_item:date_result,
+							});
+						})
+					})
+				})
+			})
+
+
+		}
+	);
 });

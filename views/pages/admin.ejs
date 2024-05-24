@@ -1,0 +1,361 @@
+<%- include('../partials/head') %>
+  <% if (!userId) { %>
+    <%- include('../partials/headerMain') %>
+
+      <% } else { %> <%- include('../partials/headerSub') %>
+          <% } %>
+
+            <link rel="stylesheet" href="/css/style.css">
+
+            <style>
+              .main-dashboard {
+                display: flex;
+                /* margin: 0; */
+                /* min-height: 80vh; */
+                /* display: block; */
+              }
+
+              .sidebar {
+                width: 200px;
+                background-color: #2c3e50;
+                color: white;
+                min-height: 100vh;
+                padding: 20px;
+                box-sizing: border-box;
+              }
+
+              .sidebar ul {
+                list-style: none;
+                padding: 0;
+                border-radius: 12px;
+              }
+
+              .sidebar ul li {
+                margin: 20px 0;
+                border-radius: 12px;
+              }
+
+              .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                display: block;
+                padding: 11px;
+                border-radius: 12px;
+                text-align: center;
+              }
+
+              .sidebar ul li a:hover {
+                background-color: white;
+                color: black;
+              }
+
+              .sidebar ul li a.active {
+                background-color: white;
+                color: black;
+              }
+
+              .sidebar ul li a:focus {
+                background-color: white;
+                color: black;
+              }
+
+              .main-content {
+                flex-grow: 1;
+                padding: 20px;
+                box-sizing: border-box;
+              }
+
+              .dashboard {
+                display: none;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+              }
+
+              .heading-container {
+                display: block;
+                justify-content: center;
+                margin-top: 30px;
+              }
+
+              .result-class {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                margin: 10px;
+              }
+
+              .result {
+                padding: 20px;
+                border: 2px solid red;
+                min-width: 300px;
+                /* justify-content: center;
+                align-items: center; */
+                text-align: center;
+                margin: 20px;
+                border-radius: 5px;
+              }
+
+              form {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                flex-direction: column;
+              }
+
+              strong {
+                font-size: 22px;
+              }
+
+              .table-container {
+                display: flex;
+                padding: 20px;
+                border: 2px solid red;
+                min-width: 300px;
+                text-align: center;
+                margin: 20px;
+                border-radius: 5px;
+                align-items: center;
+                justify-content: center;
+              }
+
+              /* table {
+                min-width: 60vw;
+              } */
+
+              th,
+              td {
+                min-width: 20vw;
+                padding: 10px;
+                border-color: inherit;
+                border-style: solid;
+                border-width: 1px;
+              }
+
+              .dashboard h2 {
+                text-align: center;
+              }
+
+              .date_container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            </style>
+            <section class="main-dashboard">
+
+              <div class="sidebar">
+                <ul>
+                  <li><a href="#" onclick="showDashboard('dashboard1')">Stock</a></li>
+                  <li><a href="#" onclick="showDashboard('dashboard2')">Total Sales</a></li>
+                  <li><a href="#" onclick="showDashboard('dashboard3')">Top Selling Product</a></li>
+                  <li><a href="#" onclick="showDashboard('dashboard4')">Current Stock Level</a></li>
+                </ul>
+              </div>
+              <div class="main-content">
+
+                <div id="dashboard1" class="dashboard">
+                  <h2>Stock</h2>
+                  <div class="table-container">
+                    <!-- <strong>Stock</strong> -->
+                    <!-- <dvi class="table-container"> -->
+
+                    <table>
+
+                      <tr>
+                        <th>Name</th>
+                        <!-- <th>Packing</th> -->
+                        <!-- <th>Price</th> -->
+                        <th>Total Quantity</th>
+                        <th>Available Quantity</th>
+                      </tr>
+                      <% stocks.forEach((stock)=>{ %>
+                        <tr>
+                          <!-- <td></td> -->
+                          <td>
+                            <%= stock.name %>
+                          </td>
+                          <td>
+                            <%= stock.total_quantity %>
+                          </td>
+                          <td>
+                            <%= stock.remaining_quantity %>
+                          </td>
+                        </tr>
+
+                        <% }) %>
+                    </table>
+                    <!-- </dvi> -->
+                  </div>
+                </div>
+                <div id="dashboard2" class="dashboard">
+                  <h2>Sales</h2>
+                  <!-- <p>This is the content of Dashboard 1.</p> -->
+                  <form action="/admin" method="post" id="submitForm">
+                    <label for="date_sub" style="font-size: 20px;">Enter Date to view total sales</label>
+                    <input type="date" id="date_sub" name="date_sub" style="padding: 10px; margin: 10px; width: 250px;">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                  <div class="date_container">
+
+                    <b>Date: <%= date %></b>
+                  </div>
+                  <div class="result-class">
+                    <div class="result">
+                      <strong>Total Sales</strong>
+                      <p>
+                        <b>
+                          Amount:
+                        </b>
+                        <%= totalSales %> PKR
+                      </p>
+                    </div>
+                    <div class="result">
+                      <strong>Average Sales</strong>
+                      <p>
+                        <b>
+                          Amount:
+                        </b>
+                        <%= averageSales %> PKR
+                      </p>
+                    </div>
+                    <div class="result">
+                      <strong>No of Orders</strong>
+                      <p>
+                        <b>
+                          Numbers:
+                        </b>
+                        <%= placedOrders %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="result">
+                    <strong>Product Sale per day</strong>
+                    <div class="table-container" style="border: none;">
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <th>Quantity</th>
+                        </tr>
+                        <% if (Array.isArray(per_day_item) && per_day_item.length> 0) { %>
+                          <% per_day_item.forEach((items)=> { %>
+                            <tr>
+                              <td>
+                                <%= items.name %>
+                              </td>
+                              <td>
+                                <%= items.quantity_sold %>
+                              </td>
+                            </tr>
+                            <% }) %>
+                              <% } else { %>
+                                <tr>
+                                  <td colspan="2">No items found.</td>
+                                </tr>
+                                <% } %>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div id="dashboard3" class="dashboard">
+                  <h2>Sales</h2>
+                  <!-- <p>This is the content of Dashboard 1.</p> -->
+                  <form action="/admin" method="post" id="submitForm">
+                    <label for="date_sub" style="font-size: 20px;">Enter Date to view total Product per day</label>
+                    <input type="date" id="date_sub" name="date_sub" style="padding: 10px; margin: 10px; width: 250px;">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                  <div class="result-class">
+
+                    <div class="result">
+                      <strong>Total Sales</strong>
+
+                      <p>
+                        <br>
+                        <b>
+                          Name:
+                        </b>
+                        <%= date %> <br>
+                          <b>
+                            Quantity:
+                          </b>
+                          <%= totalSales %> PKR
+                      </p>
+                    </div>
+                    <!-- <div class="result">
+                      <strong>Average Sales</strong>
+                      <p>
+                        <br>
+                        <b>
+                          Date:
+                        </b>
+                        <%= date %> <br>
+                          <b>
+                            Amount:
+                          </b>
+                          <%= averageSales %> PKR
+                      </p>
+                    </div>
+                    <div class="result">
+                      <strong>No of Orders</strong>
+                      <p>
+                        <br>
+                        <b>
+                          Date:
+                        </b>
+                        <%= date %> <br>
+                          <b>
+                            Numbers:
+                          </b>
+                          <%= placedOrders %>
+                      </p>
+                    </div> -->
+                  </div>
+                </div>
+                <div id="dashboard4" class="dashboard">
+                  <h2>Dashboard 4</h2>
+                  <p>This is the content of Dashboard 4.</p>
+                  <ul>
+                    <li>Item 4.1</li>
+                    <li>Item 4.2</li>
+                    <li>Item 4.3</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <script>
+              function showDashboard(dashboardId) {
+                // Hide all dashboards
+                var dashboards = document.querySelectorAll('.dashboard');
+                dashboards.forEach(function (dashboard) {
+                  dashboard.style.display = 'none';
+                });
+
+                // Show the selected dashboard
+                var selectedDashboard = document.getElementById(dashboardId);
+                if (selectedDashboard)
+                {
+                  selectedDashboard.style.display = 'block';
+                }
+                // Save the selected dashboard to local storage
+                localStorage.setItem('selectedDashboard', dashboardId);
+              }
+
+              // Optionally, show the first dashboard by default
+              document.addEventListener('DOMContentLoaded', function () {
+                // showDashboard('dashboard1');
+                var savedDashboard = localStorage.getItem('selectedDashboard') || 'dashboard1';
+                showDashboard(savedDashboard);
+              });
+
+
+            </script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+            <%- include('../partials/footer') %>
