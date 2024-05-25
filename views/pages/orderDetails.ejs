@@ -8,31 +8,23 @@
                         <link rel="stylesheet" href="/css/style.css">
 
                         <style>
+                            .main_section {
+                                min-height: 80vh;
+                            }
+
                             .heading-container {
                                 display: flex;
                                 justify-content: center;
                                 margin-top: 30px;
                             }
-
-                            .order-innfo-list {
-                                flex: 1;
-                            }
-
-                            .head span {
-                                margin-top: 15px;
-                            }
-
-                            .row {
-                                --bs-gutter-x: 1.5rem;
-                                --bs-gutter-y: 1.5rem;
-                            }
-
+                            
                             .order-info-class {
                                 padding: 20px;
                             }
 
                             .order-innfo-list {
-
+                                
+                                flex: 1;
                                 display: grid;
                                 gap: 20px;
                                 grid-template-columns: 300px 300px 300px;
@@ -42,8 +34,6 @@
                             .order-row {
 
                                 display: grid;
-                                /* flex-direction: column; */
-                                /* border: 1px solid #ccc; */
                                 border-radius: 10px;
                                 padding: 15px;
                                 align-items: center;
@@ -51,8 +41,6 @@
                                 background-color: #ffffffd1;
                                 backdrop-filter: blur(30px);
                                 box-shadow: 0 0px 0px 0px rgba(227, 228, 237, 0.37);
-                                /* background-color: #f9f9f9; */
-                                /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
                             }
 
                             .order-details {
@@ -83,6 +71,17 @@
                                 margin-bottom: 5px;
                             }
 
+                            .head span {
+                                margin-top: 15px;
+                            }
+                            
+                            .row {
+                                --bs-gutter-x: 1.5rem;
+                                --bs-gutter-y: 1.5rem;
+                            }
+                            
+
+
                             #no_order {
                                 text-align: center;
                             }
@@ -94,9 +93,6 @@
                                 justify-content: center;
                             }
 
-                            .main_section {
-                                min-height: 80vh;
-                            }
                         </style>
 
                         <section class="main_section">
@@ -130,6 +126,7 @@
                                 </div>
 
                                 <% } else { %>
+                                    
                                     <p id="no_order">
                                     <h3 style="text-align: center;">No orders found.</h3>
                                     </p>

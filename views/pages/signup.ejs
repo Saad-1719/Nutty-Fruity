@@ -19,8 +19,7 @@
                             
                         </style>
 
-
-                        <div class="signup-container">
+                        <section class="signup-container">
                             <h2 class="text-center mb-4">Sign Up</h2>
                             <form id="signupForm">
                                 <div class="mb-3">
@@ -57,7 +56,7 @@
                                     Have have an account? <a href="/login">Login</a>
                                 </p>
                             </form>
-                        </div>
+                        </section>
 
                         <script>
                             document.getElementById('signupForm').addEventListener('submit', async function (event) {
@@ -69,7 +68,6 @@
                                 const shippingaddress = document.getElementById('shippingaddress').value;
                                 const retypepassword = document.getElementById('retypepassword').value;
 
-                                // Validate name
                                 if (firstname === '')
                                 {
                                     alert('Please enter your name.');
@@ -86,24 +84,24 @@
                                     return;
                                 }
 
-                                // Validate email
                                 if (!isValidEmail(email))
                                 {
                                     alert('Please enter a valid email address.');
                                     return;
                                 }
 
-                                // Validate password
                                 if (password.length < 6)
                                 {
                                     alert('Password must be at least 6 characters long.');
                                     return;
                                 }
+
                                 if (password !== retypepassword)
                                 {
                                     alert('Password mismatched.');
                                     return;
                                 }
+
                                 try
                                 {
                                     const response = await fetch('/signup', {
@@ -119,7 +117,6 @@
                                     if (response.ok)
                                     {
                                         alert('Signup successful!');
-                                        // Optionally redirect the user
                                         window.location.href = '/';
                                     } else
                                     {
@@ -133,7 +130,6 @@
                             });
 
                             function isValidEmail(email) {
-                                // This is a basic email validation function, you can enhance it as needed
                                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                                 return emailRegex.test(email);
                             }

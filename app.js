@@ -1,17 +1,17 @@
 const express = require("express");
-// const { title } = require("process");
 const app = express();
 const port = 3030;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const mysqlprom = require("mysql2/promise");
 const mysql = require("mysql2");
-// const { error } = require("console");
-// const { localsName } = require("ejs");
 
 //setting view engine
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+
+//session handler module
 
 app.use(
 	session({
@@ -23,6 +23,7 @@ app.use(
 );
 
 // creating pool
+
 const prompool = mysqlprom.createPool({
 	host: "localhost",
 	user: "root",
@@ -40,6 +41,7 @@ const pool = mysql.createPool({
 });
 
 //check for connection
+
 pool.getConnection((err, connection) =>
 {
 	if (err) {
@@ -53,6 +55,8 @@ pool.getConnection((err, connection) =>
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//home page render
+
 app.get("/", (req, res) =>
 {
 	res.render("pages/index", {
@@ -60,6 +64,8 @@ app.get("/", (req, res) =>
 		userId: req.session.userId,
 	});
 });
+
+//login page render
 
 app.get("/login", (req, res) =>
 {
@@ -76,7 +82,8 @@ app.get("/login", (req, res) =>
 	});
 });
 
-// Login route
+// login request handler
+
 app.post("/login", (req, res) =>
 {
 	const email = req.body.email;
@@ -102,11 +109,8 @@ app.post("/login", (req, res) =>
 				req.session.successMessage = "Login Successful";
 				if (userRole === "child_user") {
 					res.redirect("/product");
-					// res.redirect("/product");
 				} else {
-					// Handle other roles or default redirection if needed
 					res.redirect("/admin");
-
 				}
 			} else {
 				console.log("error login ");
@@ -117,16 +121,7 @@ app.post("/login", (req, res) =>
 	);
 });
 
-//rending signup page
-app.get("/signup", (req, res) =>
-{
-	res.render("pages/signup", {
-		// user,
-		title: "Signup",
-		userId: req.session.userId,
-		errorMessage: null,
-	});
-});
+//functions to handle user access based on user roles
 
 function isUser(req, res, next)
 {
@@ -139,14 +134,38 @@ function isUser(req, res, next)
 
 function restrictAdminAccess(req, res, next)
 {
-	if (req.session.userRole === 'super_admin')
-	{
+	if (req.session.userRole === 'super_admin') {
 		res.status(403).send('Access denied');
 	}
 	else {
 		next();
 	}
 }
+
+function isAdmin(req, res, next)
+{
+	if (req.session.userRole === 'super_admin') {
+		next();
+	} else {
+		res.status(403).send('Access denied, session timed out');
+		res.redirect("/login");
+
+	}
+}
+
+//rending signup page
+
+app.get("/signup", (req, res) =>
+{
+	res.render("pages/signup", {
+		title: "Signup",
+		userId: req.session.userId,
+		errorMessage: null,
+	});
+});
+
+//signup request handler
+
 app.post("/signup", async (req, res) =>
 {
 	const { email, password, retypepassword, fname, lname, shippingaddress } =
@@ -163,8 +182,7 @@ app.post("/signup", async (req, res) =>
 
 		if (rows.length > 0) {
 			return res
-				.status(400)
-				.json({ error: "Email already exists. Please use a different email." });
+				.status(400).json({ error: "Email already exists. Please use a different email." });
 		} else {
 			await prompool.query(
 				"INSERT INTO users (email, user_password,fname,lname,shipping_address) VALUES (?, ?,?,?,?)",
@@ -179,7 +197,8 @@ app.post("/signup", async (req, res) =>
 });
 
 // rendering product page
-app.get("/product",restrictAdminAccess, (req, res) =>
+
+app.get("/product", restrictAdminAccess, (req, res) =>
 {
 	pool.query(
 		"SELECT name, image, weight, price, category FROM products",
@@ -190,9 +209,7 @@ app.get("/product",restrictAdminAccess, (req, res) =>
 				res.status(500).send("Internal Server Error");
 				return;
 			}
-			// Separate categories from the result set
 			const categories = results.map((product) => product.category);
-			// Remove duplicate categories
 			const uniqueCategories = [...new Set(categories)];
 			res.render("pages/product", {
 				title: "Product",
@@ -204,6 +221,8 @@ app.get("/product",restrictAdminAccess, (req, res) =>
 	);
 });
 
+//handling carting request
+
 app.post("/product", (req, res) =>
 {
 	const userId = req.session.userId;
@@ -212,75 +231,73 @@ app.post("/product", (req, res) =>
 		res.status(401).send("Unauthorized: Please login first.");
 		return;
 	}
-	// const productsJSON = JSON.stringify(products);
 	console.log("User ID:", userId);
 	console.log("Total:", total);
-	pool.query(
-		"INSERT INTO orders (user_id, total) VALUES (?, ?)",
-		[userId, total],
-		(error, results, fields) =>
-		{
-			if (error) {
-				console.error("Error placing order:", error);
-				res.status(500).send("Internal Server Error");
-				return;
-			}
-			console.log("Order placed successfully!");
-
-			const user_order_id = results.insertId;
-			console.log("Order ID:", user_order_id);
-
-			let updateCount = 0;
-			let errorOccurred = false;
-
-			products.forEach((product) =>
-			{
-				const { name, price, quantity } = product;
-				pool.query(
-					"INSERT INTO order_details (order_id, product_name, price_single_item, quantity) VALUES (?, ?, ?, ?)",
-					[user_order_id, name, price, quantity],
-					(error, results, fields) =>
-					{
-						if (error) {
-							console.error("Error placing insertion:", error);
-							if (!errorOccurred) {
-								errorOccurred = true;
-								res.status(500).send("Internal Server Error");
-							}
-							return;
-						}
-						console.log("Product inserted successfully:", product);
-
-						pool.query(
-							"UPDATE products SET remaining_quantity = remaining_quantity - ? WHERE name = ?",
-							[quantity, name],
-							(error) =>
-							{
-								if (error) {
-									console.error("Error updating product quantity:", error);
-									if (!errorOccurred) {
-										errorOccurred = true;
-										res.status(500).send("Internal Server Error");
-									}
-									return;
-								}
-								console.log(
-									"Product quantity updated successfully for product:",
-									name
-								);
-								updateCount++;
-								// Send success response after all updates are done
-								if (updateCount === products.length && !errorOccurred) {
-									res.send("Order placed successfully!");
-								}
-							}
-						);
-					}
-				);
-			});
+	pool.query("INSERT INTO orders (user_id, total) VALUES (?, ?)", [userId, total], (error, results, fields) =>
+	{
+		if (error) {
+			console.error("Error placing order:", error);
+			res.status(500).send("Internal Server Error");
+			return;
 		}
+
+		console.log("Order placed successfully!");
+
+		const user_order_id = results.insertId;
+		console.log("Order ID:", user_order_id);
+
+		let updateCount = 0;
+		let errorOccurred = false;
+
+		products.forEach((product) =>
+		{
+			const { name, price, quantity } = product;
+			pool.query(
+				"INSERT INTO order_details (order_id, product_name, price_single_item, quantity) VALUES (?, ?, ?, ?)",
+				[user_order_id, name, price, quantity],
+				(error, results, fields) =>
+				{
+					if (error) {
+						console.error("Error placing insertion:", error);
+						if (!errorOccurred) {
+							errorOccurred = true;
+							res.status(500).send("Internal Server Error");
+						}
+						return;
+					}
+					console.log("Product inserted successfully:", product);
+
+					pool.query(
+						"UPDATE products SET remaining_quantity = remaining_quantity - ? WHERE name = ?",
+						[quantity, name],
+						(error) =>
+						{
+							if (error) {
+								console.error("Error updating product quantity:", error);
+								if (!errorOccurred) {
+									errorOccurred = true;
+									res.status(500).send("Internal Server Error");
+								}
+								return;
+							}
+							console.log(
+								"Product quantity updated successfully for product:",
+								name
+							);
+							updateCount++;
+							if (updateCount === products.length && !errorOccurred) {
+								res.send("Order placed successfully!");
+							}
+						}
+					);
+				}
+			);
+		});
+	}
 	);
 });
+
+//rendering order details page
 
 app.get("/orderDetails", isUser, (req, res) =>
 {
@@ -306,7 +323,6 @@ app.get("/orderDetails", isUser, (req, res) =>
 						order_date: new Date(row.order_date).toLocaleDateString("en-US", {
 							timeZone: "Asia/Karachi",
 						}),
-						// order_date: new Date(row.order_date).toLocaleString('en-US', { timeZone: 'Asia/Karachi', timeZoneName: 'short', weekday: 'short', month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
 
 						total: row.total,
 						products: [],
@@ -342,6 +358,8 @@ app.get("/orderDetails", isUser, (req, res) =>
 	);
 });
 
+//renndering account page
+
 app.get("/account", isUser, (req, res) =>
 {
 	const userId = req.session.userId;
@@ -366,33 +384,7 @@ app.get("/account", isUser, (req, res) =>
 	);
 });
 
-app.post("/logout", (req, res) =>
-{
-	req.session.destroy((err) =>
-	{
-		if (err) {
-			console.error("Error destroying session:", err);
-		}
-		res.redirect("/login");
-	});
-});
-
-app.listen(port, () =>
-{
-	console.log(`App listening at port ${port}`);
-});
-
-
-function isAdmin(req, res, next)
-{
-	if (req.session.userRole === 'super_admin') {
-		next();
-	} else {
-		res.status(403).send('Access denied, session timed out');
-		res.redirect("/login");
-
-	}
-}
+//rendering admin panel
 
 app.get("/admin", isAdmin, (req, res) =>
 {
@@ -429,7 +421,9 @@ app.get("/admin", isAdmin, (req, res) =>
 	})
 });
 
-app.post("/admin",isAdmin, (req, res) =>
+//handling post request to fetch specific data
+
+app.post("/admin", isAdmin, (req, res) =>
 {
 	const date_sub = req.body.date_sub;
 	console.log(`the date is: ${date_sub}`);
@@ -470,7 +464,7 @@ app.post("/admin",isAdmin, (req, res) =>
 						res.status(500).send("internal server error");
 						return;
 					}
-				
+
 					res.render("pages/admin", {
 						title: "Admin",
 						userId: req.session.userId,
@@ -487,4 +481,24 @@ app.post("/admin",isAdmin, (req, res) =>
 			});
 		});
 	});
+});
+
+//destroying session
+
+app.post("/logout", (req, res) =>
+{
+	req.session.destroy((err) =>
+	{
+		if (err) {
+			console.error("Error destroying session:", err);
+		}
+		res.redirect("/login");
+	});
+});
+
+//printing port number on console
+
+app.listen(port, () =>
+{
+	console.log(`App listening at port ${port}`);
 });
