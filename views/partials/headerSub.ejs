@@ -1,10 +1,14 @@
 <style>
     li:hover {
-        /* box-shadow: inset; */
-        background-color: rgb(198, 187, 187);
-        border-radius: 2px solid black;
-        transition: all;
-        color: rgb(255, 255, 255);
+        border-radius: 6px;
+        background-color: rgb(255 255 255);
+        color: rgb(0 0 0);
+    }
+
+    .navbar-dark .navbar-nav .nav-link:focus,
+    .navbar-dark .navbar-nav .nav-link:hover {
+        color: black;
+
     }
 
     @keyframes fadeOut {
@@ -20,19 +24,16 @@
     .fade-out {
         animation: fadeOut 1s forwards;
     }
+
+    .navbar-dark .navbar-nav .nav-link {
+        color: white;
+    }
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Orchard Oasis Online</a>
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -52,18 +53,19 @@
                 <!-- <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin</a>
                 </li> -->
-                
+
             </ul>
         </div>
     </div>
 </nav>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll(".nav-link");
 
         navLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPath) {
+            if (link.getAttribute("href") === currentPath)
+            {
                 link.parentElement.style.display = "none";
             }
         });

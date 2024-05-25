@@ -15,7 +15,7 @@ app.use(express.static("public"));
 
 app.use(
 	session({
-		secret: "your_secret_key",
+		secret: "D4mX9sP3vK",
 		resave: false,
 		saveUninitialized: true,
 		cookie: { maxAge: 300000 },
@@ -137,6 +137,16 @@ function isUser(req, res, next)
 	}
 }
 
+function restrictAdminAccess(req, res, next)
+{
+	if (req.session.userRole === 'super_admin')
+	{
+		res.status(403).send('Access denied');
+	}
+	else {
+		next();
+	}
+}
 app.post("/signup", async (req, res) =>
 {
 	const { email, password, retypepassword, fname, lname, shippingaddress } =
@@ -169,7 +179,7 @@ app.post("/signup", async (req, res) =>
 });
 
 // rendering product page
-app.get("/product", (req, res) =>
+app.get("/product",restrictAdminAccess, (req, res) =>
 {
 	pool.query(
 		"SELECT name, image, weight, price, category FROM products",
@@ -378,7 +388,9 @@ function isAdmin(req, res, next)
 	if (req.session.userRole === 'super_admin') {
 		next();
 	} else {
-		res.status(403).send('Access denied');
+		res.status(403).send('Access denied, session timed out');
+		res.redirect("/login");
+
 	}
 }
 
