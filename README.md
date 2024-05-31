@@ -1,7 +1,7 @@
 
-# Orchard Oasis
+# Nutty & Fruity
 
-Our project aims to transform the traditional grocery shopping experience by introducing an innovative online platform dedicated to the sale of fresh fruits, vegetables, and dry fruits. This platform will provide customers with a convenient and efficient way to purchase high-quality produce from the comfort of their homes.
+Our project aims to transform the traditional grocery shopping experience by introducing an innovative online platform dedicated to the sale of fresh fruits, and dry fruits. This platform will provide customers with a convenient and efficient way to purchase high-quality produce from the comfort of their homes.
 
 
 
@@ -62,12 +62,19 @@ lname varchar(255) null,
 );
 
 - sample data
-- INSERT INTO Products (name, weight, price, image, category,total_quantity, remaining_quantity) 
-VALUES 
-    ('Red Chilli', 0.5, 250,"https://images.unsplash.com/photo-1526346698789-22fd84314424?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Vegetables', 100,100),
-    ('Red Apple', 1 , 400,"https://images.unsplash.com/photo-1439127989242-c3749a012eac?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Fruits',200,200),
-    ('Green Chilli', 0.25, 150,"https://images.unsplash.com/photo-1576763595295-c0371a32af78?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Vegetables',135,135),
-    ('Carrot', 0.5 , 100,"https://images.unsplash.com/photo-1582515073490-39981397c445?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Vegetables',75,75);
+- Fruit category
+- INSERT INTO Products (name, weight, price, image, category,total_quantity, remaining_quantity) VALUES 
+('Dragon Fruit', 0.5, 5000,"https://images.unsplash.com/photo-1527325678964-54921661f888?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Fruits', 40,40), 
+('Avocardo', 0.25 , 3500,"https://images.unsplash.com/photo-1590005024862-6b67679a29fb?q=80&w=1940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Fruits',35,35), 
+('Pineapple', 2.5, 2000,"https://images.unsplash.com/photo-1550828520-4cb496926fc9?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Fruits', 53, 53), 
+('Blueberries', 0.3 , 1000,"https://images.unsplash.com/photo-1554795808-3231c32711cf?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Fruits', 66, 66);
+-Dry Fruit category
+- INSERT INTO Products (name, weight, price, image, category,total_quantity, remaining_quantity) VALUES 
+('Almods', 1, 2000,"https://images.unsplash.com/photo-1508061253366-f7da158b6d46?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Dry-Fruits', 140,140), 
+('Roasted Cashews', 1 , 3200,"https://images.unsplash.com/photo-1509912760195-4f6cfd8cce2c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Dry-Fruits',210,210), 
+('Salted Pistachio', 0.5, 1850,"https://images.unsplash.com/photo-1614061810671-e6f5ff055104?q=80&w=1866&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Dry-Fruits', 189 , 189), 
+('Dry Apricot', 1, 850,"https://images.unsplash.com/photo-1595412017587-b7f3117dff54?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Dry-Fruits', 135 , 135),  
+('Walnuts', 0.8 , 1200,"https://images.unsplash.com/photo-1617471217326-011df77101be?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" , 'Dry-Fruits', 245, 245);
 
 - table to maintain orders 
 - CREATE TABLE orders (
