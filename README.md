@@ -1,5 +1,5 @@
 
-# Orchard Oasis Online
+# Orchard Oasis
 
 Our project aims to transform the traditional grocery shopping experience by introducing an innovative online platform dedicated to the sale of fresh fruits, vegetables, and dry fruits. This platform will provide customers with a convenient and efficient way to purchase high-quality produce from the comfort of their homes.
 
@@ -21,6 +21,8 @@ Run these Commands
 - npm init -y
 - npm install express@4.17.1
 - npm install ejs@3.1.6
+- npm install express express-session
+- npm install -g nodemon
 ## Setup database
 - Install mysql database
 On mysql workbench, run these commands: 
@@ -81,6 +83,6 @@ VALUES
     order_id INT,
     product_name VARCHAR(255),
     quantity INT,
-    price_per_piece DECIMAL(10,2),
+    price_single_item DECIMAL(10,2),
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
 );
