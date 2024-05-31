@@ -131,7 +131,21 @@
                                 backdrop-filter: blur(30px);
                                 box-shadow: 0 0px 0px 0px rgba(227, 228, 237, 0.37);
                             }
-                            
+
+                            .card-img-top {
+                                width: 100%;
+                                height: 200px;
+                                object-fit: cover;
+                            }
+
+                            /* Fixed size for card body */
+                            .card-body {
+                                flex-grow: 1;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: space-between;
+                                height: 175px;
+                            }
                         </style>
 
                         <div class="heading-container">
@@ -149,8 +163,8 @@
                             <button class="btn btn-primary filter-button show-button" product-category="Fruits">
                                 Fruits
                             </button>
-                            <button class="btn btn-primary filter-button show-button" product-category="Vegetables">
-                                Vegetables
+                            <button class="btn btn-primary filter-button show-button" product-category="Dry-Fruits">
+                                Dry Fruits
                             </button>
                         </div>
 
