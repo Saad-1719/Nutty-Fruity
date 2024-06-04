@@ -128,14 +128,16 @@ function isUser(req, res, next)
 	if (req.session.userRole === 'child_user') {
 		next();
 	} else {
-		res.status(403).send('Access denied');
+		res.status(403).send('Access denied or time out');
+		res.redirect("/");
 	}
 }
 
 function restrictAdminAccess(req, res, next)
 {
 	if (req.session.userRole === 'super_admin') {
-		res.status(403).send('Access denied');
+		res.status(403).send('Access denied or time out');
+		return;
 	}
 	else {
 		next();
@@ -148,7 +150,8 @@ function isAdmin(req, res, next)
 		next();
 	} else {
 		res.status(403).send('Access denied, session timed out');
-		res.redirect("/login");
+		// res.redirect("/login");
+		return;
 
 	}
 }
@@ -209,14 +212,28 @@ app.get("/product", restrictAdminAccess, (req, res) =>
 				res.status(500).send("Internal Server Error");
 				return;
 			}
-			const categories = results.map((product) => product.category);
-			const uniqueCategories = [...new Set(categories)];
-			res.render("pages/product", {
-				title: "Product",
-				categories: uniqueCategories,
-				products: results,
-				userId: req.session.userId,
-			});
+			pool.query("SELECT p.name FROM products p INNER JOIN order_details o ON p.name = o.product_name INNER JOIN orders ord ON o.order_id = ord.order_id GROUP BY p.name ORDER BY SUM(o.quantity) DESC LIMIT 2", (error, queryResult, fields) =>
+			{
+				if (error) {
+					console.error("Error executing query:", error);
+					res.status(500).send("Internal Server Error");
+					return;
+				}
+				if (queryResult.length > 0) {
+					const categories = results.map((product) => product.category);
+					const uniqueCategories = [...new Set(categories)];
+					const topSelling = queryResult[0].name;
+					console.log(`your top selling is ${topSelling}`);
+					res.render("pages/product", {
+						title: "Product",
+						categories: uniqueCategories,
+						products: results,
+						userId: req.session.userId,
+						notification: topSelling,
+					});
+				}
+
+			})
 		}
 	);
 });

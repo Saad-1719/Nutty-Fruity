@@ -148,6 +148,24 @@
                             }
                         </style>
 
+                        <div class="modal fade" id="orderModalNotification" tabindex="-1"
+                            aria-labelledby="orderModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="orderModalLabel">Announcement</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Hi, Hurry up, our top selling product for today is <b>
+                                            <%= notification %>
+                                        </b>. Place
+                                        order before it gets out of stock ;)
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="heading-container">
                             <h2 class="text-center mb-4">Products</h2>
                         </div>
@@ -183,11 +201,13 @@
                                                     </h5>
                                                     <p class="card-text mb-2">Weight: <%= product.weight %> kg</p>
                                                     <p class="card-text mb-2">Price: <%= product.price %> PKR</p>
-                                                    <button class="btn btn-primary add-to-cart-btn mt-auto"
-                                                        data-id="<%= product.id %>" data-name="<%= product.name %>"
-                                                        data-price="<%= product.price %>"
-                                                        data-image="<%= product.image %>">
-                                                        Add to Cart
+                                                    <button class="btn btn-primary add-to-cart-btn mt-auto" <% if
+                                                        (userId) { %>
+                                                            data-id="<%= product.id %>" data-name="<%= product.name %>"
+                                                                    data-price="<%= product.price %>"
+                                                                        data-image="<%= product.image %>"
+                                                        <% } else { %> <% } %>onclick="addToCartBtn('<%= userId %>')">
+                                                                            Add to Cart
                                                     </button>
                                                 </div>
                                             </div>
@@ -285,16 +305,14 @@
                                     const { image, name, price, quantity } = item;
                                     total += price * quantity;
                                     cartElement.innerHTML += `
-                <div class='cart-item'>
-                    <div class='row-img'>
-                        <img class='rowimg' src='${image}'>
-                    </div>
-                    <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
-                    <h2 style='font-size: 15px;'>PKR ${(
-                                            price * quantity
-                                        ).toFixed(2)}</h2>
-                    <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
-                </div>`;
+                                        <div class='cart-item'>
+                                            <div class='row-img'>
+                                                <img class='rowimg' src='${image}'>
+                                            </div>
+                                            <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
+                                            <h2 style='font-size: 15px;'>PKR ${(price * quantity).toFixed(2)}</h2>
+                                            <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
+                                        </div>`;
                                 });
                                 document.getElementById("count").textContent = cart.length;
                                 document.getElementById("total").textContent = `PKR ${total.toFixed(2)}`;
@@ -400,6 +418,25 @@
                                     }
                                 });
                             });
+
+                            $(document).ready(function () {
+                                const userId = "<%= userId %>";
+                                const notification = "<%= notification %>";
+
+                                if (userId && notification)
+                                {
+                                    const orderModal = new bootstrap.Modal(document.getElementById("orderModalNotification"));
+                                    orderModal.show();
+                                }
+                            });
+
+                            function addToCartBtn(userId) {
+                                if (!userId)
+                                {
+                                    alert("Please login first to place an order.");
+                                    window.location.href = "/login";
+                                }
+                            }
                         </script>
 
                         <%- include('../partials/footer') %>
