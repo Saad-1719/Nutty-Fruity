@@ -184,8 +184,7 @@ app.post("/signup", async (req, res) =>
 		]);
 
 		if (rows.length > 0) {
-			return res
-				.status(400).json({ error: "Email already exists. Please use a different email." });
+			return res.status(400).json({ error: "Email already exists. Please use a different email." });
 		} else {
 			await prompool.query(
 				"INSERT INTO users (email, user_password,fname,lname,shipping_address) VALUES (?, ?,?,?,?)",
@@ -220,13 +219,14 @@ app.get("/product", restrictAdminAccess, (req, res) =>
 					return;
 				}
 				if (queryResult.length > 0) {
-					const categories = results.map((product) => product.category);
-					const uniqueCategories = [...new Set(categories)];
+					const category = results.map((product) => product.category);
+					// const uniqueCategories = [...new Set(categories)];
 					const topSelling = queryResult[0].name;
 					console.log(`your top selling is ${topSelling}`);
 					res.render("pages/product", {
 						title: "Product",
-						categories: uniqueCategories,
+						// categories: uniqueCategories,
+						categories: category,
 						products: results,
 						userId: req.session.userId,
 						notification: topSelling,
