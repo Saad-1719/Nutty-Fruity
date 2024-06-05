@@ -427,6 +427,9 @@
                                 {
                                     const orderModal = new bootstrap.Modal(document.getElementById("orderModalNotification"));
                                     orderModal.show();
+                                    setTimeout(function () {
+                                    orderModal.hide();
+                                }, 1000);
                                 }
                             });
 
