@@ -401,6 +401,52 @@ app.get("/account", isUser, (req, res) =>
 	);
 });
 
+
+// app.post("/account/update", isUser, (req, res) => {
+//     const userId = req.session.userId;
+//     const { fname, lname, email, shipping_address } = req.body;
+
+//     const query = `
+//         UPDATE users
+//         SET fname = ?, lname = ?, email = ?, shipping_address = ?
+//         WHERE id = ?
+//     `;
+
+//     pool.query(query, [fname, lname, email, shipping_address, userId], (error, results) => {
+//         if (error) {
+//             console.error("Error updating user details:", error);
+//             res.status(500).send("Internal Server Error");
+//             return;
+//         }
+//         res.redirect("/account");
+//     });
+// });
+
+app.post("/account/update", isUser, (req, res) => {
+    const userId = req.session.userId;
+    const { fname, lname, shipping_address } = req.body;
+
+    if (!fname || !lname || !shipping_address) {
+        return res.status(400).send("All fields are required");
+    }
+
+    const query = `
+        UPDATE users
+        SET fname = ?, lname = ?, shipping_address = ?
+        WHERE id = ?
+    `;
+
+    pool.query(query, [fname, lname, shipping_address, userId], (error, results) => {
+        if (error) {
+            console.error("Error updating user details:", error);
+            res.status(500).send("Internal Server Error");
+            return;
+        }
+        res.redirect("/account");
+    });
+});
+
+
 //rendering admin panel
 
 app.get("/admin", isAdmin, (req, res) =>
