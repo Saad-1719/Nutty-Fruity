@@ -203,11 +203,13 @@
                                                     <p class="card-text mb-2">Price: <%= product.price %> PKR</p>
                                                     <button class="btn btn-primary add-to-cart-btn mt-auto" <% if
                                                         (userId) { %>
-                                                            data-id="<%= product.id %>" data-name="<%= product.name %>"
-                                                                    data-price="<%= product.price %>"
-                                                                        data-image="<%= product.image %>"
-                                                        <% } else { %> <% } %>onclick="addToCartBtn('<%= userId %>')">
-                                                                            Add to Cart
+                                                        data-id="<%= product.id %>" data-name="<%= product.name %>"
+                                                                data-price="<%= product.price %>"
+                                                                    data-image="<%= product.image %>"
+                                                                        <% } else { %>
+                                                                            <% } %>onclick="addToCartBtn('<%= userId %>
+                                                                                    ')">
+                                                                                    Add to Cart
                                                     </button>
                                                 </div>
                                             </div>
@@ -305,18 +307,22 @@
                                     const { image, name, price, quantity } = item;
                                     total += price * quantity;
                                     cartElement.innerHTML += `
-                                        <div class='cart-item'>
-                                            <div class='row-img'>
-                                                <img class='rowimg' src='${image}'>
-                                            </div>
-                                            <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
-                                            <h2 style='font-size: 15px;'>PKR ${(price * quantity).toFixed(2)}</h2>
-                                            <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
-                                        </div>`;
+                <div class='cart-item'>
+                    <div class='row-img'>
+                        <img class='rowimg' src='${image}'>
+                    </div>
+                    <p style='font-size:12px;'>${name} (Quantity: ${quantity})</p>
+                    <h2 style='font-size: 15px;'>PKR ${(price * quantity).toFixed(2)}</h2>
+                    <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
+                </div>`;
                                 });
                                 document.getElementById("count").textContent = cart.length;
                                 document.getElementById("total").textContent = `PKR ${total.toFixed(2)}`;
                                 updatePlaceOrderButton();
+
+                                // Save the cart to localStorage
+                                localStorage.setItem("cart", JSON.stringify(cart));
+                                localStorage.setItem("total", total);
                             }
 
                             function updatePlaceOrderButton() {
@@ -331,10 +337,8 @@
                                 }
                             }
 
-                            function searchProducts(userId) {
-                                const searchInput = document
-                                    .getElementById("searchInput")
-                                    .value.toLowerCase();
+                            function searchProducts() {
+                                const searchInput = document.getElementById("searchInput").value.toLowerCase();
                                 const productItems = document.querySelectorAll(".product-item");
                                 productItems.forEach((item) => {
                                     const productName = item.getAttribute("data-name");
@@ -349,6 +353,15 @@
                             }
 
                             document.addEventListener("DOMContentLoaded", function () {
+                                const storedCart = localStorage.getItem("cart");
+                                const storedTotal = localStorage.getItem("total");
+                                if (storedCart)
+                                {
+                                    cart = JSON.parse(storedCart);
+                                    total = parseFloat(storedTotal);
+                                    displaycart();
+                                }
+
                                 const productList = document.getElementById("product-list");
                                 productList.addEventListener("click", function (event) {
                                     if (event.target.classList.contains("add-to-cart-btn"))
@@ -393,7 +406,10 @@
                                         },
                                         success: function (response) {
                                             cart = [];
+                                            total = 0;
                                             displaycart();
+                                            localStorage.removeItem("cart");
+                                            localStorage.removeItem("total");
                                             displayOrderConfirmationModal();
                                         },
                                         error: function (xhr, status, error) {
@@ -423,15 +439,19 @@
                                 const userId = "<%= userId %>";
                                 const notification = "<%= notification %>";
 
-                                if (userId && notification)
+                                if (userId && notification && !localStorage.getItem('announcementShown'))
                                 {
                                     const orderModal = new bootstrap.Modal(document.getElementById("orderModalNotification"));
                                     orderModal.show();
                                     setTimeout(function () {
-                                    orderModal.hide();
-                                }, 1000);
+                                        orderModal.hide();
+                                    }, 2000);
+
+                                    // Set the flag in localStorage to indicate the announcement has been shown
+                                    localStorage.setItem('announcementShown', 'true');
                                 }
                             });
+
 
                             function addToCartBtn(userId) {
                                 if (!userId)
@@ -441,5 +461,6 @@
                                 }
                             }
                         </script>
+
 
                         <%- include('../partials/footer') %>
